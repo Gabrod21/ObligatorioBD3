@@ -1,80 +1,81 @@
 package persistencia;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class CrearBase
 {
-	public static void main (String[] args)
+	public static int ejecutaStatement(Connection con, String sql) throws SQLException 
 	{
-		InputStreamReader is = new InputStreamReader (System.in);
-		BufferedReader br = new BufferedReader (is);
-		
+		Statement stmt = (Statement) con.createStatement();
+		int r = ((Statement) stmt).executeUpdate(sql);
+		stmt.close();
+		return r;
+	}
+	
+	public static void main (String[] args) throws FileNotFoundException, IOException
+	{
 		try {
 			
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
+			Properties p = new Properties();
+			String nomArch = "config.properties";
+			p.load (new FileInputStream (nomArch));
+			
+			String driver = p.getProperty("driver");
+			String url  = p.getProperty("url");
+			String user = p.getProperty("user");
+			String password = p.getProperty("password");
+			
 			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			String url = "jdbc:mysql://localhost:3306/Prueba";
-			Connection con = DriverManager.getConnection(url, "root", "Pass1234");
+			Connection con = (Connection) DriverManager.getConnection(url, user, password);
 			
-			String createBD = "CREATE DATABASE Escuela";
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(createBD);
-			stmt.close();
+			String sql;
+						
+			sql = "DROP DATABASE ObligatorioBD3";
+			ejecutaStatement(con, sql);
+						
+			sql = "CREATE DATABASE ObligatorioBD3";
+			ejecutaStatement(con, sql);
 			
-			String use = "USE escuela";
-			stmt = con.createStatement();
-			stmt.executeUpdate(use);
-			stmt.close();
+			sql = "USE ObligatorioBD3";
+			ejecutaStatement(con, sql);
 			
-			String createTableAlumnos = "CREATE TABLE Alumnos ("	+
-										"    cedula INT,"			+
-										"    nombre VARCHAR(45),"	+
-										"    apellido VARCHAR(45),"	+
-										"    PRIMARY KEY (cedula)"	+
-										");";
-			stmt = con.createStatement();
-			stmt.executeUpdate(createTableAlumnos);
-			stmt.close();
+			sql = "CREATE TABLE Alumnos (cedula INT,nombre VARCHAR(45),apellido VARCHAR(45),PRIMARY KEY (cedula))";
+			ejecutaStatement(con, sql);
 			
-			String createTableRegistros = "CREATE TABLE Registros ("								+
-										 "    numero INT,"											+
-										 "    cedAlu INT,"											+
-										 "    actividad VARCHAR(45),"								+
-										 "    nota INT,"											+
-										 "    PRIMARY KEY (numero, cedAlu),"						+
-										 "    FOREIGN KEY (cedAlu) REFERENCES Alumnos(cedula)"		+
-										 ");";
-			stmt = con.createStatement();
-			stmt.executeUpdate(createTableRegistros);
-			stmt.close();
+			sql = "CREATE TABLE Registros (numero INT,cedAlu INT,actividad VARCHAR(45),nota INT,PRIMARY KEY (numero, cedAlu),FOREIGN KEY (cedAlu) REFERENCES Alumnos(cedula))";
+			ejecutaStatement(con, sql);
 			
-			String insert1 = "insert into Alumnos values (12345678, 'Matilda', 'Wormwood')";
-			String insert2 = "insert into Alumnos values (25554449, 'Charlie', 'Brown')";
-			String insert3 = "insert into Alumnos values (39876542, 'Dora', 'Márquez')";
-			String insert4 = "insert into Alumnos values (51112223, 'Daniel', 'Mitchell')";
-			String insert5 = "insert into Alumnos values (66666666, 'Merlina', 'Addams')";	
-			stmt = con.createStatement();
-			stmt.executeUpdate(insert1);
-			stmt.executeUpdate(insert2);
-			stmt.executeUpdate(insert3);
-			stmt.executeUpdate(insert4);
-			stmt.executeUpdate(insert5);
-			stmt.close();
-			
+			sql = "insert into Alumnos values (12345678, 'Matilda', 'Wormwood')";
+			ejecutaStatement(con, sql);
+			sql = "insert into Alumnos values (25554449, 'Charlie', 'Brown')";
+			ejecutaStatement(con, sql);
+			sql = "insert into Alumnos values (39876542, 'Dora', 'Márquez')";
+			ejecutaStatement(con, sql);
+			sql = "insert into Alumnos values (51112223, 'Daniel', 'Mitchell')";
+			ejecutaStatement(con, sql);
+			sql = "insert into Alumnos values (66666666, 'Merlina', 'Addams')";
+			ejecutaStatement(con, sql);
+						
 			con.close();
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (FileNotFoundException e) {				// si no encuentra el archivo de configuracion
 			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (IOException e){ 							// si ocurre cualquier otro error de E/S 
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {			    // al cargar el driver puede no existir la clase
+			e.printStackTrace();
+		} 
+		catch (SQLException e) {						// error en la conexión
 			e.printStackTrace();
 		}
 	}
