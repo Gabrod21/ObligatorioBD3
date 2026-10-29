@@ -1,0 +1,10 @@
+# Eclipse compiled files / directories
+/bin/
+/target/
+
+# OS temporary files
+.DS_Store
+Thumbs.db
+
+# Configuración local de propiedades si contiene datos sensibles
+# config.properties
