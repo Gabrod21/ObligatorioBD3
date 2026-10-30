@@ -39,7 +39,7 @@ public class DAORegistros {
             return rs.getInt(1);
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -76,7 +76,7 @@ public class DAORegistros {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -114,7 +114,7 @@ public class DAORegistros {
             return null;
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -161,7 +161,7 @@ public class DAORegistros {
             return lista;
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -198,7 +198,7 @@ public class DAORegistros {
             return rs.getDouble(1);
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -243,7 +243,7 @@ public class DAORegistros {
             return null;
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {

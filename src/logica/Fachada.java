@@ -2,15 +2,15 @@ package logica;
 
 import java.util.List;
 
-import Parte3.logica.valueObjects.VOActividad;
-import Parte3.logica.valueObjects.VOAlumno;
-import Parte3.logica.valueObjects.VOAlumnoProm;
-import Parte3.logica.valueObjects.VORegistro;
-import Parte3.logica.valueObjects.VORegistroListado;
-import Parte3.persistencia.conexiones.PersistenciaException;
-import Parte3.persistencia.conexiones.interfaces.IConexion;
-import Parte3.persistencia.conexiones.interfaces.IPoolConexiones;
-import Parte3.persistencia.daos.DAOAlumnos;
+import logica.valueObjects.VOActividad;
+import logica.valueObjects.VOAlumno;
+import logica.valueObjects.VOAlumnoProm;
+import logica.valueObjects.VORegistro;
+import logica.valueObjects.VORegistroListado;
+import persistencia.conexiones.PersistenciaException;
+import persistencia.conexiones.interfaces.IConexion;
+import persistencia.conexiones.interfaces.IPoolConexiones;
+import persistencia.daos.DAOAlumnos;
 
 public class Fachada {
 

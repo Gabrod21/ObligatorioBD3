@@ -33,7 +33,7 @@ public class DAOAlumnos {
             return rs.next();
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -67,7 +67,7 @@ public class DAOAlumnos {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -101,7 +101,7 @@ public class DAOAlumnos {
             return null;
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -130,11 +130,12 @@ public class DAOAlumnos {
             ps = icon.getConnection().prepareStatement(consultas.esVacio());
             rs = ps.executeQuery();
 
-            rs.next();
-            return rs.getInt(1) == 0;
+            Boolean esVacio = true;
+            if (rs.next()) esVacio = false;
+            return esVacio;
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -175,7 +176,7 @@ public class DAOAlumnos {
             return lista;
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -216,7 +217,7 @@ public class DAOAlumnos {
             return null;
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {
@@ -253,7 +254,7 @@ public class DAOAlumnos {
             return rs.getInt(1);
 
         } catch (SQLException e) {
-            throw new PersistenciaException(e);
+            throw new PersistenciaException(e.getMessage());
 
         } finally {
             try {

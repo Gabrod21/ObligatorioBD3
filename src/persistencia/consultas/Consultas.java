@@ -43,7 +43,7 @@ public class Consultas {
     }
 
     public String alumnoMayorPromedio() {
-        String query = "select * from escuela.Alumnos where cedula in (select cedAlu from escuela.Registros group by cedAlu order by avg(nota) desc limit 1)";
+        String query = "select *, (select avg(nota) from escuela.Registros where cedAlu = Alumnos.cedula) as promedio from escuela.Alumnos where cedula in (select cedAlu from escuela.Registros group by cedAlu having avg(nota) = (select max(promedio) from (select avg(nota) as promedio from escuela.Registros group by cedAlu) as promedios)) limit 1;";
         return query;
     }
 
