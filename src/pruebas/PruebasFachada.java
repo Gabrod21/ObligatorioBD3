@@ -1,6 +1,7 @@
 package pruebas;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Random;
 
@@ -22,7 +23,13 @@ public class PruebasFachada
 		BufferedReader br = new BufferedReader (is);
 		
 		IPoolConexiones pool = new PoolConexiones();
-		Fachada fach = new Fachada(pool);
+		Fachada fach = null;
+		try {
+			fach = new Fachada(pool);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		//1: Prueba método nuevoAlumno(voA: VOAlumno): void			--OK, passed

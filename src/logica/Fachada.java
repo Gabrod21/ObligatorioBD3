@@ -1,7 +1,10 @@
 package logica;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
+import logica.RMI.IFachadaRemota;
 import logica.valueObjects.VOActividad;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
@@ -12,11 +15,12 @@ import persistencia.conexiones.interfaces.IConexion;
 import persistencia.conexiones.interfaces.IPoolConexiones;
 import persistencia.daos.DAOAlumnos;
 
-public class Fachada {
+public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
 
     private IPoolConexiones pool;
 
-    public Fachada(IPoolConexiones pool) {
+    public Fachada(IPoolConexiones pool) throws RemoteException {
+        super();
         this.pool = pool;
     }
 

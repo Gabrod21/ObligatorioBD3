@@ -16,7 +16,7 @@ public class VentanaPrincipal extends JFrame {
 
         this.controlador = controlador;
 
-        setTitle("Sistema de gestión de alumnos");
+        setTitle("Obligatorio grupo 1");
         setSize(400, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -73,8 +73,8 @@ public class VentanaPrincipal extends JFrame {
         );
 
         btnMayorPromedio.addActionListener(e ->
-            new VentanaAlumnoMayorPromedio(this, controlador).setVisible(true)
-        );
+        new VentanaAlumnoMayorPromedio(this, controlador)
+    );
 
         btnContarAlumnos.addActionListener(e ->
             new VentanaContarAlumnos(this, controlador).setVisible(true)

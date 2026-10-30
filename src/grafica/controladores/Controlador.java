@@ -30,7 +30,12 @@ public class Controlador {
 		
 		//if (pool != null) System.out.println("pool no es null");
 		
-		this.fachada = new Fachada(pool);
+		try {
+			this.fachada = new Fachada(pool);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     // 1. Nuevo alumno
