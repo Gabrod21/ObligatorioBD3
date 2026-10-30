@@ -39,7 +39,7 @@ public class Fachada {
         }
     }
 
-    public void registraNota(int cedA, VORegistro voR) throws PersistenciaException {
+    public void registrarNota(int cedA, VORegistro voR) throws PersistenciaException {
         IConexion icon = pool.obtenerConexion(true);
         boolean transaccionOK = false;
 
