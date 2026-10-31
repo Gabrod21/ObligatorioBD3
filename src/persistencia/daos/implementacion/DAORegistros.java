@@ -1,4 +1,4 @@
-package persistencia.daos;
+package persistencia.daos.implementacion;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,31 +6,37 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import logica.Alumno;
-import logica.valueObjects.VOAlumno;
-import logica.valueObjects.VOAlumnoProm;
+import logica.Registro;
+import logica.valueObjects.VOActividad;
+import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
 import persistencia.consultas.Consultas;
 
-public class DAOAlumnos {
+public class DAORegistros {
 
+    private int cedAlumno;
     private Consultas consultas;
 
-    public DAOAlumnos() {
+    public DAORegistros(int cedA) {
+        this.cedAlumno = cedA;
         this.consultas = new Consultas();
     }
 
-    public boolean member(IConexion icon, int cedA) throws PersistenciaException {
+    public int largo(IConexion icon) throws PersistenciaException {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.existeAlumno());
-            ps.setInt(1, cedA);
+            ps = icon.getConnection().prepareStatement(
+                consultas.numeroUltimoRegistroDeAlumno()
+            );
 
+            ps.setInt(1, cedAlumno);
             rs = ps.executeQuery();
-            return rs.next();
+
+            rs.next();
+            return rs.getInt(1);
 
         } catch (SQLException e) {
             throw new PersistenciaException(e.getMessage());
@@ -54,15 +60,18 @@ public class DAOAlumnos {
         }
     }
 
-    public void insert(IConexion icon, Alumno alu) throws PersistenciaException {
+    public void insback(IConexion icon, Registro reg) throws PersistenciaException {
         PreparedStatement ps = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.insertarAlumno());
+            ps = icon.getConnection().prepareStatement(
+                consultas.insertarNota()
+            );
 
-            ps.setInt(1, alu.getCedula());
-            ps.setString(2, alu.getNombre());
-            ps.setString(3, alu.getApellido());
+            ps.setInt(1, reg.getNumero());
+            ps.setInt(2, cedAlumno);
+            ps.setString(3, reg.getActividad());
+            ps.setInt(4, reg.getNota());
 
             ps.executeUpdate();
 
@@ -80,21 +89,25 @@ public class DAOAlumnos {
         }
     }
 
-    public Alumno find(IConexion icon, int cedA) throws PersistenciaException {
+    public Registro kesimo(IConexion icon, int numR) throws PersistenciaException {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.existeAlumno());
-            ps.setInt(1, cedA);
+            ps = icon.getConnection().prepareStatement(
+                consultas.obtenerRegistro()
+            );
+
+            ps.setInt(1, cedAlumno);
+            ps.setInt(2, numR);
 
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new Alumno(
-                    rs.getInt("cedula"),
-                    rs.getString("nombre"),
-                    rs.getString("apellido")
+                return new Registro(
+                    rs.getInt("numero"),
+                    rs.getInt("nota"),
+                    rs.getString("actividad")
                 );
             }
 
@@ -122,54 +135,26 @@ public class DAOAlumnos {
         }
     }
 
-    public Boolean esVacio(IConexion icon) throws PersistenciaException {
+    public List<VORegistroListado> listarRegistros(IConexion icon)
+            throws PersistenciaException {
+
+        List<VORegistroListado> lista = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.esVacio());
-            rs = ps.executeQuery();
+            ps = icon.getConnection().prepareStatement(
+                consultas.listarRegistros()
+            );
 
-            Boolean esVacio = true;
-            if (rs.next()) esVacio = false;
-            return esVacio;
-
-        } catch (SQLException e) {
-            throw new PersistenciaException(e.getMessage());
-
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                // Se ignora el error al cerrar el ResultSet
-            }
-
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (SQLException e) {
-                // Se ignora el error al cerrar el PreparedStatement
-            }
-        }
-    }
-
-    public List<VOAlumno> listarAlumnos(IConexion icon) throws PersistenciaException {
-        List<VOAlumno> lista = new ArrayList<>();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            ps = icon.getConnection().prepareStatement(consultas.listarAlumnos());
+            ps.setInt(1, cedAlumno);
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                lista.add(new VOAlumno(
-                    rs.getInt("cedula"),
-                    rs.getString("nombre"),
-                    rs.getString("apellido")
+                lista.add(new VORegistroListado(
+                    rs.getString("actividad"),
+                    rs.getInt("nota"),
+                    rs.getInt("numero")
                 ));
             }
 
@@ -197,24 +182,20 @@ public class DAOAlumnos {
         }
     }
 
-    public VOAlumnoProm alumnoMayorPromedio(IConexion icon) throws PersistenciaException {
+    public double promedioNotas(IConexion icon) throws PersistenciaException {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.alumnoMayorPromedio());
+            ps = icon.getConnection().prepareStatement(
+                consultas.promedioNotas()
+            );
+
+            ps.setInt(1, cedAlumno);
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return new VOAlumnoProm(
-                    rs.getInt("cedula"),
-                    rs.getString("nombre"),
-                    rs.getString("apellido"),
-                    rs.getDouble("promedio")
-                );
-            }
-
-            return null;
+            rs.next();
+            return rs.getDouble(1);
 
         } catch (SQLException e) {
             throw new PersistenciaException(e.getMessage());
@@ -238,20 +219,28 @@ public class DAOAlumnos {
         }
     }
 
-    public int contarAlumnos(IConexion icon, String act, int nota) throws PersistenciaException {
+    public VOActividad actividadMasCursada(IConexion icon)
+            throws PersistenciaException {
+
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.contarAlumnos());
+            ps = icon.getConnection().prepareStatement(
+                consultas.actividadMasCursada()
+            );
 
-            ps.setString(1, act);
-            ps.setInt(2, nota);
-
+            ps.setInt(1, cedAlumno);
             rs = ps.executeQuery();
-            rs.next();
 
-            return rs.getInt(1);
+            if (rs.next()) {
+                return new VOActividad(
+                    rs.getString("actividad"),
+                    rs.getInt("cantidad")
+                );
+            }
+
+            return null;
 
         } catch (SQLException e) {
             throw new PersistenciaException(e.getMessage());

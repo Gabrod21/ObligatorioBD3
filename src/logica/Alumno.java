@@ -7,7 +7,7 @@ import logica.valueObjects.VORegistro;
 import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
-import persistencia.daos.DAORegistros;
+import persistencia.daos.implementacion.DAORegistros;
 
 public class Alumno {
 
