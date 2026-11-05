@@ -1,3 +1,4 @@
+
 package logica;
 
 import java.io.FileInputStream;
@@ -202,6 +203,12 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
             }
 
             IDAORegistros daoRegistros = fabrica.crearIDAORegistros(cedA);
+
+            if (daoRegistros.largo(icon) == 0) {
+                throw new PersistenciaException(
+                    "No existen registros para el alumno"
+                );
+            }
 
             double promedio = daoRegistros.promedioNotas(icon);
 

@@ -57,36 +57,24 @@ public class Controlador {
     }
 
     // 3. Listar alumnos
-    public List<VOAlumno> listarAlumnos() throws RemoteException {
-        try {
-            return fachada.listarAlumnos();
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+    public List<VOAlumno> listarAlumnos()
+            throws RemoteException, PersistenciaException {
 
-        return null;
+        return fachada.listarAlumnos();
     }
 
     // 4. Obtener registro
-    public VORegistro obtenerRegistro(int cedA, int numR) throws RemoteException {
-        try {
-            return fachada.obtenerRegistro(cedA, numR);
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+    public VORegistro obtenerRegistro(int cedA, int numR)
+            throws RemoteException, PersistenciaException {
 
-        return null;
+        return fachada.obtenerRegistro(cedA, numR);
     }
 
     // 5. Listar registros
-    public List<VORegistroListado> listarRegistros(int cedA) throws RemoteException {
-        try {
-            return fachada.listarRegistros(cedA);
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+    public List<VORegistroListado> listarRegistros(int cedA)
+            throws RemoteException, PersistenciaException {
 
-        return null;
+        return fachada.listarRegistros(cedA);
     }
 
     // 6. Promedio de notas
@@ -97,35 +85,23 @@ public class Controlador {
     }
     
     // 7. Alumno con mayor promedio
-    public VOAlumnoProm alumnoMayorPromedio() throws RemoteException {
-        try {
-            return fachada.alumnoMayorPromedio();
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+    public VOAlumnoProm alumnoMayorPromedio()
+            throws RemoteException, PersistenciaException {
 
-        return null;
+        return fachada.alumnoMayorPromedio();
     }
 
     // 8. Contar alumnos
-    public int contarAlumnos(String act, int nota) throws RemoteException {
-        try {
-            return fachada.contarAlumnos(act, nota);
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+    public int contarAlumnos(String act, int nota)
+            throws RemoteException, PersistenciaException {
 
-        return 0;
+        return fachada.contarAlumnos(act, nota);
     }
 
     // 9. Actividad más cursada
-    public VOActividad actividadmasCursada(int cedA) throws RemoteException {
-        try {
-            return fachada.actividadmasCursada(cedA);
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+    public VOActividad actividadmasCursada(int cedA)
+            throws RemoteException, PersistenciaException {
 
-        return null;
+        return fachada.actividadmasCursada(cedA);
     }
 }
