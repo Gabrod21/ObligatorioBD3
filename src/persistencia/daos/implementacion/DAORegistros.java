@@ -12,8 +12,9 @@ import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
 import persistencia.consultas.Consultas;
+import persistencia.daos.interfaces.IDAORegistros;
 
-public class DAORegistros {
+public class DAORegistros implements IDAORegistros {
 
     private int cedAlumno;
     private Consultas consultas;
