@@ -37,8 +37,8 @@ public class CrearBase
 			
 			String sql;
 						
-			sql = "DROP DATABASE ObligatorioBD3";
-			ejecutaStatement(con, sql);
+			//sql = "DROP DATABASE ObligatorioBD3";
+			//ejecutaStatement(con, sql);
 						
 			sql = "CREATE DATABASE ObligatorioBD3";
 			ejecutaStatement(con, sql);
