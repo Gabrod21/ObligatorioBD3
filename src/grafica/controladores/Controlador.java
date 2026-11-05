@@ -90,16 +90,12 @@ public class Controlador {
     }
 
     // 6. Promedio de notas
-    public double promedioNotas(int cedA) throws RemoteException {
-        try {
-            return fachada.promedioNotas(cedA);
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+    public double promedioNotas(int cedA)
+            throws RemoteException, PersistenciaException {
 
-        return 0;
+        return fachada.promedioNotas(cedA);
     }
-
+    
     // 7. Alumno con mayor promedio
     public VOAlumnoProm alumnoMayorPromedio() throws RemoteException {
         try {
