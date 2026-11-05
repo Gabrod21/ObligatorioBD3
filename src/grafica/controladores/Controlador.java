@@ -39,14 +39,12 @@ public class Controlador {
     }
 
     // 1. Nuevo alumno
-    public void nuevoAlumno(int cedula, String nombre, String apellido) throws RemoteException {
+    public void nuevoAlumno(int cedula, String nombre, String apellido)
+            throws RemoteException, PersistenciaException {
+
         VOAlumno voA = new VOAlumno(cedula, nombre, apellido);
 
-        try {
-            fachada.nuevoAlumno(voA);
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+        fachada.nuevoAlumno(voA);
     }
 
     // 2. Registrar nota
