@@ -48,14 +48,12 @@ public class Controlador {
     }
 
     // 2. Registrar nota
-    public void registrarNota(int cedA, String actividad, int nota) throws RemoteException {
+    public void registrarNota(int cedA, String actividad, int nota)
+            throws RemoteException, PersistenciaException {
+
         VORegistro voR = new VORegistro(actividad, nota);
 
-        try {
-            fachada.registrarNota(cedA, voR);
-        } catch (PersistenciaException e) {
-            e.printStackTrace();
-        }
+        fachada.registrarNota(cedA, voR);
     }
 
     // 3. Listar alumnos
