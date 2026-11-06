@@ -1,8 +1,10 @@
 package persistencia.daos.interfaces;
 
-public interface FabricaAbstracta {
+import persistencia.conexiones.PersistenciaException;
 
-    IDAOAlumnos crearIDAOAlumnos();
+public interface FabricaAbstracta 
+{
+    IDAOAlumnos crearIDAOAlumnos() throws PersistenciaException  ;
 
-    IDAORegistros crearIDAORegistros(int cedA);
+    IDAORegistros crearIDAORegistros(int cedA) throws PersistenciaException ;
 }
