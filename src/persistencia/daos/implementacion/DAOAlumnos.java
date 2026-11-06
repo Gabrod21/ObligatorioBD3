@@ -91,12 +91,10 @@ public class DAOAlumnos implements IDAOAlumnos {
 
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return new Alumno(
-                    rs.getInt("cedula"),
-                    rs.getString("nombre"),
-                    rs.getString("apellido")
-                );
+            if (rs.next()) 
+            {
+            	int cedula = rs.getInt("cedula");
+            	return new Alumno(cedula,rs.getString("nombre"),rs.getString("apellido"),new DAORegistros(cedula));
             }
 
             return null;

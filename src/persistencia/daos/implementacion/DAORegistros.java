@@ -36,8 +36,11 @@ public class DAORegistros implements IDAORegistros {
             ps.setInt(1, cedAlumno);
             rs = ps.executeQuery();
 
-            rs.next();
-            return rs.getInt(1);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+            return 0;
 
         } catch (SQLException e) {
             throw new PersistenciaException(e.getMessage());

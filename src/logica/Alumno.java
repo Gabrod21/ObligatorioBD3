@@ -7,20 +7,20 @@ import logica.valueObjects.VORegistro;
 import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
-import persistencia.daos.implementacion.DAORegistros;
+import persistencia.daos.interfaces.IDAORegistros;
 
 public class Alumno {
 
     private int cedula;
     private String nombre;
     private String apellido;
-    private DAORegistros secuencia;
+    private IDAORegistros secuencia;
 
-    public Alumno(int cedula, String nombre, String apellido) {
+    public Alumno(int cedula, String nombre, String apellido, IDAORegistros secuencia) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.secuencia = new DAORegistros(cedula);
+        this.secuencia = secuencia;
     }
 
     public int getCedula() {

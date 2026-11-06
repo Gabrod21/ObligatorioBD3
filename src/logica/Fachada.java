@@ -66,10 +66,11 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
             }
 
             Alumno alu = new Alumno(
-                voA.getCedula(),
-                voA.getNombre(),
-                voA.getApellido()
-            );
+            	    voA.getCedula(),
+            	    voA.getNombre(),
+            	    voA.getApellido(),
+            	    fabrica.crearIDAORegistros(voA.getCedula())
+            	);
 
             dao.insert(icon, alu);
 

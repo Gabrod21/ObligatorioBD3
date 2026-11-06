@@ -114,6 +114,12 @@ public class DAORegistrosTxt implements IDAORegistros
 
         List<Registro> lista = leerRegistros();
 
+        for (Registro r : lista) {
+            if (r.getNumero() == reg.getNumero()) {
+                throw new PersistenciaException("El registro ya existe");
+            }
+        }
+
         lista.add(reg);
 
         guardarRegistros(lista);

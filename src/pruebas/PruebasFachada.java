@@ -22,6 +22,37 @@ public class PruebasFachada
 		InputStreamReader is = new InputStreamReader (System.in);
 		BufferedReader br = new BufferedReader (is);
 		
+		// PRUEBA DE RUTA TXT
+		System.out.println("========== PRUEBA RUTA TXT ==========");
+
+		try {
+		    java.io.File config = new java.io.File("config.properties");
+
+		    System.out.println("Archivo config: " + config.getAbsolutePath());
+		    System.out.println("¿Existe config? " + config.exists());
+
+		    java.util.Properties p = new java.util.Properties();
+		    java.io.FileInputStream fis = new java.io.FileInputStream(config);
+		    p.load(fis);
+		    fis.close();
+
+		    String ruta = p.getProperty("rutaTxt");
+
+		    System.out.println("Ruta configurada: [" + ruta + "]");
+
+		    java.io.File carpeta = new java.io.File(ruta.trim());
+
+		    System.out.println("Ruta absoluta: " + carpeta.getAbsolutePath());
+		    System.out.println("¿Existe carpeta? " + carpeta.exists());
+		    System.out.println("¿Es directorio? " + carpeta.isDirectory());
+		    System.out.println("¿Se puede escribir? " + carpeta.canWrite());
+
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+
+		System.out.println("=====================================");
+		
 		IPoolConexiones pool = new PoolConexiones();
 		Fachada fach = null;
 		try {
@@ -32,6 +63,7 @@ public class PruebasFachada
 		}
 		
 		
+		/*
 		//1: Prueba método nuevoAlumno(voA: VOAlumno): void			--OK, passed
 		Random random = new Random();
 		int cedula = 10000000 + random.nextInt(90000000);
@@ -105,7 +137,7 @@ public class PruebasFachada
 		String nombreActividad = voActMasCursada.getActividad();
 		int vecesCursada = voActMasCursada.getVeces();
 		System.out.println("\n\n9. Actividad mas cursada:\n");
-		System.out.println(nombreActividad + ", cursada " + vecesCursada + " veces" );
+		System.out.println(nombreActividad + ", cursada " + vecesCursada + " veces" );*/
 		
 	}
 }

@@ -25,7 +25,7 @@ public class ManejoTxt {
         try {
             Properties p = new Properties();
 
-            String nomTxtProp = "config/config.properties";
+            String nomTxtProp = "config.properties";
 
             try (FileInputStream fis = new FileInputStream(nomTxtProp)) {
                 p.load(fis);

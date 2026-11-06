@@ -51,7 +51,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
                 String nombre = datos[1].trim();
                 String apellido = datos[2].trim();
 
-                Alumno alu = new Alumno(cedula, nombre, apellido);
+                Alumno alu = new Alumno(cedula,nombre,apellido,new DAORegistrosTxt(cedula));
 
                 lista.add(alu);
             }
@@ -93,13 +93,13 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
         List<String[]> lista = new ArrayList<>();
 
-        String Txt = "registros" + cedula + ".txt";
+        String archivo = "registros" + cedula + ".txt";
 
-        if (!manejo.existeTxt(Txt)) {
+        if (!manejo.existeTxt(archivo)) {
             return lista;
         }
 
-        List<String> lineas = manejo.leerTxt(Txt);
+        List<String> lineas = manejo.leerTxt(archivo);
 
         try {
             for (String linea : lineas) {
@@ -112,7 +112,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
                 if (datos.length != 3) {
                     throw new PersistenciaException(
-                        "Formato incorrecto en " + Txt
+                        "Formato incorrecto en " + archivo
                     );
                 }
 
@@ -125,7 +125,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
         } catch (NumberFormatException e) {
             throw new PersistenciaException(
-                "Error en los datos de " + Txt
+                "Error en los datos de " + archivo
             );
         }
 
