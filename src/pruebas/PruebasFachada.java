@@ -53,10 +53,9 @@ public class PruebasFachada
 
 		System.out.println("=====================================");
 		
-		IPoolConexiones pool = new PoolConexiones();
 		Fachada fach = null;
 		try {
-			fach = new Fachada(pool);
+			fach = new Fachada();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

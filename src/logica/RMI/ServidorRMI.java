@@ -18,9 +18,8 @@ public class ServidorRMI {
             return;
         }
 
-        IPoolConexiones pool = new PoolConexiones();
 
-        Fachada fachada = new Fachada(pool);
+        Fachada fachada = new Fachada();
 
         Registry registro = LocateRegistry.createRegistry(puerto);
 

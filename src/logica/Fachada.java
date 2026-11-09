@@ -27,10 +27,8 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
     private IPoolConexiones pool;
     private FabricaAbstracta fabrica;
 
-    public Fachada(IPoolConexiones pool) throws RemoteException {
+    public Fachada() throws RemoteException {
         super();
-
-        this.pool = pool;
 
         Properties propiedades = new Properties();
 
@@ -45,6 +43,8 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
             fabrica = (FabricaAbstracta) clase
                     .getDeclaredConstructor()
                     .newInstance();
+            
+            this.pool = fabrica.crearPoolConexiones();
 
         } catch (Exception e) {
             throw new RemoteException(
