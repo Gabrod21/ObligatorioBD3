@@ -19,7 +19,7 @@ public class ServidorRMI {
             Fachada fachada = new Fachada(pool);
 
             // Iniciar el registro RMI
-            Registry registro = LocateRegistry.createRegistry(816);
+            Registry registro = LocateRegistry.createRegistry(711);
 
             // Publicar la fachada
             registro.rebind("Fachada", fachada);

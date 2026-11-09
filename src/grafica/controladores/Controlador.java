@@ -5,38 +5,30 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import logica.Fachada;
 import logica.LogicaException;
+import logica.RMI.IFachadaRemota;
 import logica.valueObjects.VOActividad;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
 import logica.valueObjects.VORegistro;
 import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
-import persistencia.conexiones.implementacion.PoolConexiones;
-import persistencia.conexiones.interfaces.IPoolConexiones;
 
 public class Controlador {
 
-    private Fachada fachada;
+    private IFachadaRemota fachada;
 
-    public Controlador() {
-    	IPoolConexiones pool = null;
-		try {
-			pool = new PoolConexiones();
-		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//if (pool != null) System.out.println("pool no es null");
-		
-		try {
-			this.fachada = new Fachada(pool);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    public Controlador() throws RemoteException {
+
+        try {
+            this.fachada = (IFachadaRemota)
+                Naming.lookup("rmi://localhost:711/Fachada");
+
+        } catch (Exception e) {
+            throw new RemoteException(
+                "No se pudo conectar con el servidor RMI", e
+            );
+        }
     }
 
     // 1. Nuevo alumno
@@ -84,7 +76,7 @@ public class Controlador {
 
         return fachada.promedioNotas(cedA);
     }
-    
+
     // 7. Alumno con mayor promedio
     public VOAlumnoProm alumnoMayorPromedio()
             throws RemoteException, PersistenciaException, LogicaException {

@@ -1,6 +1,8 @@
 package logica.valueObjects;
 
-public class VORegistro {
+import java.io.Serializable;
+
+public class VORegistro implements Serializable {
     private String actividad;
     private int nota;
 

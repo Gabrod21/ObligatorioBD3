@@ -1,6 +1,8 @@
 package logica.valueObjects;
 
-public class VOActividad {
+import java.io.Serializable;
+
+public class VOActividad implements Serializable {
     private String actividad;
     private int veces;
 
