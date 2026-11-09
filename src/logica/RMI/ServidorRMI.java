@@ -4,30 +4,30 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import logica.Fachada;
-import persistencia.conexiones.interfaces.IPoolConexiones;
 import persistencia.conexiones.implementacion.PoolConexiones;
+import persistencia.conexiones.interfaces.IPoolConexiones;
 
 public class ServidorRMI {
 
-    public static void main(String[] args) {
+    private static boolean iniciado = false;
 
-        try {
-            // Crear el pool de conexiones
-            IPoolConexiones pool = new PoolConexiones();
+    public static synchronized void iniciarServidor(int puerto)
+            throws Exception {
 
-            // Crear la fachada original
-            Fachada fachada = new Fachada(pool);
-
-            // Iniciar el registro RMI
-            Registry registro = LocateRegistry.createRegistry(711);
-
-            // Publicar la fachada
-            registro.rebind("Fachada", fachada);
-
-            System.out.println("Servidor RMI iniciado correctamente");
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (iniciado) {
+            return;
         }
+
+        IPoolConexiones pool = new PoolConexiones();
+
+        Fachada fachada = new Fachada(pool);
+
+        Registry registro = LocateRegistry.createRegistry(puerto);
+
+        registro.rebind("Fachada", fachada);
+
+        iniciado = true;
+
+        System.out.println("Servidor RMI iniciado en puerto " + puerto);
     }
 }

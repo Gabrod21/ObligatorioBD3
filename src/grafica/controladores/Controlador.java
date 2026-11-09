@@ -1,12 +1,14 @@
-
 package grafica.controladores;
 
+import java.io.FileInputStream;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Properties;
 
 import logica.LogicaException;
 import logica.RMI.IFachadaRemota;
+import logica.RMI.ServidorRMI;
 import logica.valueObjects.VOActividad;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
@@ -21,12 +23,26 @@ public class Controlador {
     public Controlador() throws RemoteException {
 
         try {
+            // Cargar configuración
+            Properties propiedades = new Properties();
+
+            propiedades.load(new FileInputStream("config.properties"));
+
+            // Obtener el puerto desde config.properties
+            int puerto = Integer.parseInt(propiedades.getProperty("puertoRMI"));
+
+            // El controlador le indica al servidor qué puerto utilizar
+            ServidorRMI.iniciarServidor(puerto);
+
+            // El controlador utiliza ese mismo puerto para conectarse
             this.fachada = (IFachadaRemota)
-                Naming.lookup("rmi://localhost:711/Fachada");
+                Naming.lookup("rmi://localhost:" + puerto + "/Fachada");
 
         } catch (Exception e) {
+
             throw new RemoteException(
-                "No se pudo conectar con el servidor RMI", e
+                "No se pudo cargar la configuración o iniciar/conectar con el servidor RMI",
+                e
             );
         }
     }
@@ -36,7 +52,6 @@ public class Controlador {
             throws RemoteException, PersistenciaException, LogicaException {
 
         VOAlumno voA = new VOAlumno(cedula, nombre, apellido);
-
         fachada.nuevoAlumno(voA);
     }
 
@@ -45,7 +60,6 @@ public class Controlador {
             throws RemoteException, PersistenciaException, LogicaException {
 
         VORegistro voR = new VORegistro(actividad, nota);
-
         fachada.registrarNota(cedA, voR);
     }
 
