@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import logica.Fachada;
+import logica.LogicaException;
 import logica.valueObjects.VOActividad;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
@@ -40,7 +41,7 @@ public class Controlador {
 
     // 1. Nuevo alumno
     public void nuevoAlumno(int cedula, String nombre, String apellido)
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         VOAlumno voA = new VOAlumno(cedula, nombre, apellido);
 
@@ -49,7 +50,7 @@ public class Controlador {
 
     // 2. Registrar nota
     public void registrarNota(int cedA, String actividad, int nota)
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         VORegistro voR = new VORegistro(actividad, nota);
 
@@ -65,28 +66,28 @@ public class Controlador {
 
     // 4. Obtener registro
     public VORegistro obtenerRegistro(int cedA, int numR)
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         return fachada.obtenerRegistro(cedA, numR);
     }
 
     // 5. Listar registros
     public List<VORegistroListado> listarRegistros(int cedA)
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         return fachada.listarRegistros(cedA);
     }
 
     // 6. Promedio de notas
     public double promedioNotas(int cedA)
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         return fachada.promedioNotas(cedA);
     }
     
     // 7. Alumno con mayor promedio
     public VOAlumnoProm alumnoMayorPromedio()
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         return fachada.alumnoMayorPromedio();
     }
@@ -100,7 +101,7 @@ public class Controlador {
 
     // 9. Actividad más cursada
     public VOActividad actividadmasCursada(int cedA)
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         return fachada.actividadmasCursada(cedA);
     }
