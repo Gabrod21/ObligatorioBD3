@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import logica.Alumno;
+import logica.LogicaException;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
 import persistencia.conexiones.PersistenciaException;
@@ -22,7 +23,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
     }
 
     // Lee todos los alumnos del archivo alumnos.txt
-    private List<Alumno> leerAlumnos() throws PersistenciaException {
+    private List<Alumno> leerAlumnos() throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = new ArrayList<>();
 
@@ -51,7 +52,9 @@ public class DAOAlumnosTxt implements IDAOAlumnos
                 String nombre = datos[1].trim();
                 String apellido = datos[2].trim();
 
-                Alumno alu = new Alumno(cedula,nombre,apellido,new DAORegistrosTxt(cedula));
+                Alumno alu = null;
+				alu = new Alumno(cedula,nombre,apellido);
+				
 
                 lista.add(alu);
             }
@@ -154,7 +157,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
     @Override
     public boolean member(IConexion icon, int cedA)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = leerAlumnos();
 
@@ -170,7 +173,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
     @Override
     public void insert(IConexion icon, Alumno alu)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = leerAlumnos();
 
@@ -192,7 +195,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
     @Override
     public Alumno find(IConexion icon, int cedA)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = leerAlumnos();
 
@@ -208,14 +211,14 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
     @Override
     public Boolean esVacio(IConexion icon)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         return leerAlumnos().isEmpty();
     }
 
     @Override
     public List<VOAlumno> listarAlumnos(IConexion icon)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         List<VOAlumno> resultado = new ArrayList<>();
 
@@ -237,7 +240,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
     @Override
     public VOAlumnoProm alumnoMayorPromedio(IConexion icon)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = leerAlumnos();
 
@@ -274,7 +277,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
 
     @Override
     public int contarAlumnos(IConexion icon, String act, int nota)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = leerAlumnos();
 

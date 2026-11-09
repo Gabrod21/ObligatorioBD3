@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logica.Alumno;
+import logica.LogicaException;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
 import persistencia.conexiones.PersistenciaException;
@@ -94,7 +95,15 @@ public class DAOAlumnos implements IDAOAlumnos {
             if (rs.next()) 
             {
             	int cedula = rs.getInt("cedula");
-            	return new Alumno(cedula,rs.getString("nombre"),rs.getString("apellido"),new DAORegistros(cedula));
+            	try {
+					return new Alumno(cedula,rs.getString("nombre"),rs.getString("apellido"));
+				} catch (PersistenciaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (LogicaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
 
             return null;

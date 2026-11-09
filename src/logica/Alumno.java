@@ -1,12 +1,16 @@
+
 package logica;
 
+import java.io.FileInputStream;
 import java.util.List;
+import java.util.Properties;
 
 import logica.valueObjects.VOActividad;
 import logica.valueObjects.VORegistro;
 import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
+import persistencia.daos.interfaces.FabricaAbstracta;
 import persistencia.daos.interfaces.IDAORegistros;
 
 public class Alumno {
@@ -16,11 +20,39 @@ public class Alumno {
     private String apellido;
     private IDAORegistros secuencia;
 
-    public Alumno(int cedula, String nombre, String apellido, IDAORegistros secuencia) {
+    public Alumno(int cedula, String nombre, String apellido)
+            throws PersistenciaException, LogicaException {
+
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.secuencia = secuencia;
+
+        // Cargar la fábrica dinámicamente desde config.properties.
+        Properties propiedades = new Properties();
+
+        try (FileInputStream fis = new FileInputStream("config.properties")) {
+
+            propiedades.load(fis);
+
+            String nombreClase = propiedades.getProperty("fabrica");
+
+            Class<?> clase = Class.forName(nombreClase);
+
+            FabricaAbstracta fabrica = (FabricaAbstracta) clase
+                    .getDeclaredConstructor()
+                    .newInstance();
+
+            // Crear la secuencia correspondiente a este alumno.
+            this.secuencia = fabrica.crearIDAORegistros(cedula);
+
+        } catch (PersistenciaException e) {
+            throw e;
+
+        } catch (Exception e) {
+            throw new LogicaException(
+                    "Error al inicializar la fábrica: " + e.getMessage()
+            );
+        }
     }
 
     public int getCedula() {
@@ -39,19 +71,25 @@ public class Alumno {
         return secuencia.largo(icon);
     }
 
-    public void agregarRegistro(IConexion icon, Registro reg) throws PersistenciaException {
+    public void agregarRegistro(IConexion icon, Registro reg)
+            throws PersistenciaException {
         secuencia.insback(icon, reg);
     }
 
-    public VORegistro obtenerRegistro(IConexion icon, int numR) throws PersistenciaException {
+    public VORegistro obtenerRegistro(IConexion icon, int numR)
+            throws PersistenciaException {
+
         Registro reg = secuencia.kesimo(icon, numR);
+
         if (reg == null) {
             return null;
         }
+
         return new VORegistro(reg.getActividad(), reg.getNota());
     }
 
-    public List<VORegistroListado> listarRegistros(IConexion icon) throws PersistenciaException {
+    public List<VORegistroListado> listarRegistros(IConexion icon)
+            throws PersistenciaException {
         return secuencia.listarRegistros(icon);
     }
 
@@ -59,13 +97,12 @@ public class Alumno {
         return secuencia.promedioNotas(icon);
     }
 
-    public VOActividad actividadMasCursada(IConexion icon) throws PersistenciaException {
+    public VOActividad actividadMasCursada(IConexion icon)
+            throws PersistenciaException {
         return secuencia.actividadMasCursada(icon);
     }
 
-    // Versiones originales de la especificacion.
-    // Para utilizarlas sin parametros, habria que definir como obtener
-    // una conexion; no deben crear una conexion independiente.
+    // Versiones originales de la especificación.
 
     public int cantidadRegistros() {
         throw new UnsupportedOperationException("Se requiere una IConexion");

@@ -69,8 +69,7 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
             Alumno alu = new Alumno(
                 voA.getCedula(),
                 voA.getNombre(),
-                voA.getApellido(),
-                fabrica.crearIDAORegistros(voA.getCedula())
+                voA.getApellido()
             );
 
             dao.insert(icon, alu);
@@ -115,7 +114,7 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
     }
 
     public List<VOAlumno> listarAlumnos()
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         IConexion icon = pool.obtenerConexion(false);
         boolean transaccionOK = false;
@@ -254,7 +253,7 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
     }
 
     public int contarAlumnos(String act, int nota)
-            throws PersistenciaException {
+            throws PersistenciaException, LogicaException {
 
         IConexion icon = pool.obtenerConexion(false);
         boolean transaccionOK = false;

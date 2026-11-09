@@ -17,7 +17,7 @@ public interface IFachadaRemota extends Remote {
             throws RemoteException, PersistenciaException, LogicaException;
 
     List<VOAlumno> listarAlumnos()
-            throws RemoteException, PersistenciaException;
+            throws RemoteException, PersistenciaException, LogicaException;
 
     VORegistro obtenerRegistro(int cedA, int numR)
             throws RemoteException, PersistenciaException, LogicaException;
@@ -32,7 +32,7 @@ public interface IFachadaRemota extends Remote {
             throws RemoteException, PersistenciaException, LogicaException;
 
     int contarAlumnos(String act, int nota)
-            throws RemoteException, PersistenciaException;
+            throws RemoteException, PersistenciaException, LogicaException;
 
     VOActividad actividadmasCursada(int cedA)
             throws RemoteException, PersistenciaException, LogicaException;

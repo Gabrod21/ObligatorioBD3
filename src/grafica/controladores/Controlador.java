@@ -59,7 +59,7 @@ public class Controlador {
 
     // 3. Listar alumnos
     public List<VOAlumno> listarAlumnos()
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         return fachada.listarAlumnos();
     }
@@ -94,7 +94,7 @@ public class Controlador {
 
     // 8. Contar alumnos
     public int contarAlumnos(String act, int nota)
-            throws RemoteException, PersistenciaException {
+            throws RemoteException, PersistenciaException, LogicaException {
 
         return fachada.contarAlumnos(act, nota);
     }
