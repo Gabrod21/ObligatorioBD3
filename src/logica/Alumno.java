@@ -20,7 +20,7 @@ public class Alumno {
     private String apellido;
     private IDAORegistros secuencia;
 
-    public Alumno(int cedula, String nombre, String apellido, IDAORegistros secuencia)
+    public Alumno(int cedula, String nombre, String apellido)
             throws PersistenciaException, LogicaException {
 
         this.cedula = cedula;

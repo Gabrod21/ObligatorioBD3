@@ -97,7 +97,7 @@ public class DAOAlumnos implements IDAOAlumnos {
             {
             	int cedula = rs.getInt("cedula");
             	try {
-					return new Alumno(cedula,rs.getString("nombre"),rs.getString("apellido"),new DAORegistros(cedula));
+					return new Alumno(cedula,rs.getString("nombre"),rs.getString("apellido"));
 				} catch (PersistenciaException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

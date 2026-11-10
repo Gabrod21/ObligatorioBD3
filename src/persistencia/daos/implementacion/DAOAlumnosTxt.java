@@ -86,8 +86,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
                 Alumno alu = new Alumno(
                     cedula,
                     nombre,
-                    apellido,
-                    new DAORegistrosTxt(cedula)
+                    apellido
                 );
 
                 lista.add(alu);
