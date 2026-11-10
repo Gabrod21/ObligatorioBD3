@@ -14,6 +14,7 @@ import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
 import persistencia.consultas.Consultas;
 import persistencia.daos.interfaces.IDAOAlumnos;
+import persistencia.conexiones.implementacion.Conexion;
 
 public class DAOAlumnos implements IDAOAlumnos {
 
@@ -28,7 +29,7 @@ public class DAOAlumnos implements IDAOAlumnos {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.existeAlumno());
+            ps = ((Conexion) icon).getConnection().prepareStatement(consultas.existeAlumno());
             ps.setInt(1, cedA);
 
             rs = ps.executeQuery();
@@ -60,7 +61,7 @@ public class DAOAlumnos implements IDAOAlumnos {
         PreparedStatement ps = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.insertarAlumno());
+            ps = ((Conexion) icon).getConnection().prepareStatement(consultas.insertarAlumno());
 
             ps.setInt(1, alu.getCedula());
             ps.setString(2, alu.getNombre());
@@ -87,7 +88,7 @@ public class DAOAlumnos implements IDAOAlumnos {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.existeAlumno());
+            ps = ((Conexion) icon).getConnection().prepareStatement(consultas.existeAlumno());
             ps.setInt(1, cedA);
 
             rs = ps.executeQuery();
@@ -96,7 +97,7 @@ public class DAOAlumnos implements IDAOAlumnos {
             {
             	int cedula = rs.getInt("cedula");
             	try {
-					return new Alumno(cedula,rs.getString("nombre"),rs.getString("apellido"));
+					return new Alumno(cedula,rs.getString("nombre"),rs.getString("apellido"),new DAORegistros(cedula));
 				} catch (PersistenciaException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -135,7 +136,7 @@ public class DAOAlumnos implements IDAOAlumnos {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.esVacio());
+            ps = ((Conexion) icon).getConnection().prepareStatement(consultas.esVacio());
             rs = ps.executeQuery();
 
             Boolean esVacio = true;
@@ -170,7 +171,7 @@ public class DAOAlumnos implements IDAOAlumnos {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.listarAlumnos());
+            ps = ((Conexion) icon).getConnection().prepareStatement(consultas.listarAlumnos());
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -210,7 +211,7 @@ public class DAOAlumnos implements IDAOAlumnos {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.alumnoMayorPromedio());
+            ps = ((Conexion) icon).getConnection().prepareStatement(consultas.alumnoMayorPromedio());
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -251,7 +252,7 @@ public class DAOAlumnos implements IDAOAlumnos {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(consultas.contarAlumnos());
+            ps = ((Conexion) icon).getConnection().prepareStatement(consultas.contarAlumnos());
 
             ps.setString(1, act);
             ps.setInt(2, nota);

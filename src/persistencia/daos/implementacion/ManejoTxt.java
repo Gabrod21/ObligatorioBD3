@@ -18,7 +18,7 @@ import persistencia.conexiones.PersistenciaException;
 
 public class ManejoTxt {
 
-    private static String rutaTxt = null;
+    private String rutaTxt = null;
 
     public ManejoTxt() throws PersistenciaException {
 

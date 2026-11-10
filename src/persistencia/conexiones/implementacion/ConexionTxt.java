@@ -1,10 +1,9 @@
 package persistencia.conexiones.implementacion;
 
-import java.sql.Connection;
-
 import persistencia.conexiones.PersistenciaException;
+import persistencia.conexiones.interfaces.IConexion;
 
-public  class ConexionTxt implements persistencia.conexiones.interfaces.IConexion {
+public  class ConexionTxt implements IConexion {
 
 	private boolean modifica = false;
 	
@@ -14,12 +13,6 @@ public  class ConexionTxt implements persistencia.conexiones.interfaces.IConexio
 	
 	public boolean getModifica() {
 		return modifica;
-	}
-
-	@Override
-	public Connection getConnection() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
 

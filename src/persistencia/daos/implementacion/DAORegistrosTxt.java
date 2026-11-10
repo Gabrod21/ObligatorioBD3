@@ -1,43 +1,73 @@
+
 package persistencia.daos.implementacion;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import logica.Registro;
 import logica.valueObjects.VOActividad;
 import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
+import persistencia.conexiones.implementacion.ConexionTxt;
 import persistencia.conexiones.interfaces.IConexion;
 import persistencia.daos.interfaces.IDAORegistros;
 
+public class DAORegistrosTxt implements IDAORegistros {
 
-public class DAORegistrosTxt implements IDAORegistros
-{
-    private int cedAlumno;
+    private int cedula;
     private ManejoTxt manejo;
 
-    public DAORegistrosTxt(int cedA) throws PersistenciaException {
-        this.cedAlumno = cedA;
-        this.manejo = new ManejoTxt();
+    public DAORegistrosTxt(int cedula) throws PersistenciaException {
+        this.cedula = cedula;
+        manejo = new ManejoTxt();
     }
 
-    // Devuelve el nombre del archivo del alumno
-    private String nombreTxt() {
-        return "registros" + cedAlumno + ".txt";
+    // Devuelve el nombre del archivo correspondiente al alumno
+    private String nombreArchivo() {
+        return "registros" + cedula + ".txt";
     }
 
-    // Lee todos los registros del Txt
-    private List<Registro> leerRegistros() throws PersistenciaException {
+    // Verifica que sea una conexión TXT
+    private void validarConexion(IConexion icon)
+            throws PersistenciaException {
+
+        if (!(icon instanceof ConexionTxt)) {
+            throw new PersistenciaException(
+                "Se requiere una conexion TXT"
+            );
+        }
+    }
+
+    // Verifica que la conexión permita modificar
+    private void validarModificacion(IConexion icon)
+            throws PersistenciaException {
+
+        validarConexion(icon);
+
+        ConexionTxt conexion = (ConexionTxt) icon;
+
+        if (!conexion.getModifica()) {
+            throw new PersistenciaException(
+                "La conexion no permite modificar archivos"
+            );
+        }
+    }
+
+    // Lee todos los registros del archivo
+    private List<Registro> leerRegistros()
+            throws PersistenciaException {
 
         List<Registro> lista = new ArrayList<>();
 
-        if (!manejo.existeTxt(nombreTxt())) {
+        String archivo = nombreArchivo();
+
+        if (!manejo.existeTxt(archivo)) {
             return lista;
         }
 
-        List<String> lineas = manejo.leerTxt(nombreTxt());
+        List<String> lineas = manejo.leerTxt(archivo);
 
         try {
             for (String linea : lineas) {
@@ -50,7 +80,7 @@ public class DAORegistrosTxt implements IDAORegistros
 
                 if (datos.length != 3) {
                     throw new PersistenciaException(
-                        "Formato incorrecto en " + nombreTxt()
+                        "Formato incorrecto en " + archivo
                     );
                 }
 
@@ -58,81 +88,65 @@ public class DAORegistrosTxt implements IDAORegistros
                 String actividad = datos[1].trim();
                 int nota = Integer.parseInt(datos[2].trim());
 
-                Registro reg = new Registro(numero, nota, actividad);
+                Registro reg = new Registro(
+                    numero,
+                    nota,
+                    actividad
+                );
 
                 lista.add(reg);
             }
 
         } catch (NumberFormatException e) {
             throw new PersistenciaException(
-                "Error en los datos de " + nombreTxt()
+                "Error en los datos de " + archivo
             );
         }
-
-        Collections.sort(lista,
-            Comparator.comparingInt(Registro::getNumero));
 
         return lista;
     }
 
-    // Guarda los registros ordenados por número
-    private void guardarRegistros(List<Registro> lista) throws PersistenciaException {
+    @Override
+    public int largo(IConexion icon)
+            throws PersistenciaException {
 
-        Collections.sort(lista,
-            Comparator.comparingInt(Registro::getNumero));
+        validarConexion(icon);
 
-        StringBuilder texto = new StringBuilder();
-
-        for (Registro reg : lista) {
-
-            texto.append(reg.getNumero())
-                 .append(" | ")
-                 .append(reg.getActividad())
-                 .append(" | ")
-                 .append(reg.getNota())
-                 .append(System.lineSeparator());
-        }
-
-        manejo.escribirTxt(nombreTxt(), texto.toString());
+        return leerRegistros().size();
     }
 
-    // Cantidad / último número de registro
-    public int largo(IConexion icon) throws PersistenciaException {
-
-        List<Registro> lista = leerRegistros();
-
-        if (lista.isEmpty()) {
-            return 0;
-        }
-
-        return lista.get(lista.size() - 1).getNumero();
-    }
-
-    // Agrega un registro al final lógico de la secuencia
+    @Override
     public void insback(IConexion icon, Registro reg)
             throws PersistenciaException {
 
-        List<Registro> lista = leerRegistros();
+        validarModificacion(icon);
 
-        for (Registro r : lista) {
-            if (r.getNumero() == reg.getNumero()) {
-                throw new PersistenciaException("El registro ya existe");
-            }
+        int siguiente = largo(icon) + 1;
+
+        if (reg.getNumero() != siguiente) {
+            throw new PersistenciaException(
+                "El numero de registro debe ser " + siguiente
+            );
         }
 
-        lista.add(reg);
+        String linea = reg.getNumero() + " | "
+                     + reg.getActividad() + " | "
+                     + reg.getNota();
 
-        guardarRegistros(lista);
+        manejo.agregarTxt(nombreArchivo(), linea);
     }
 
-    // Obtiene un registro por su número
-    public Registro kesimo(IConexion icon, int numR) throws PersistenciaException {
+    @Override
+    public Registro kesimo(IConexion icon, int k)
+            throws PersistenciaException {
+
+        validarConexion(icon);
 
         List<Registro> lista = leerRegistros();
 
         for (Registro reg : lista) {
 
-            if (reg.getNumero() == numR) {
+            if (reg.getNumero() == k) {
                 return reg;
             }
         }
@@ -140,8 +154,11 @@ public class DAORegistrosTxt implements IDAORegistros
         return null;
     }
 
-    // Devuelve el listado de registros
-    public List<VORegistroListado> listarRegistros(IConexion icon) throws PersistenciaException {
+    @Override
+    public List<VORegistroListado> listarRegistros(IConexion icon)
+            throws PersistenciaException {
+
+        validarConexion(icon);
 
         List<VORegistroListado> resultado = new ArrayList<>();
 
@@ -161,8 +178,11 @@ public class DAORegistrosTxt implements IDAORegistros
         return resultado;
     }
 
-    // Calcula el promedio de notas
-    public double promedioNotas(IConexion icon) throws PersistenciaException {
+    @Override
+    public double promedioNotas(IConexion icon)
+            throws PersistenciaException {
+
+        validarConexion(icon);
 
         List<Registro> lista = leerRegistros();
 
@@ -179,8 +199,11 @@ public class DAORegistrosTxt implements IDAORegistros
         return (double) suma / lista.size();
     }
 
-    // Devuelve la actividad que más veces aparece
-    public VOActividad actividadMasCursada(IConexion icon) throws PersistenciaException {
+    @Override
+    public VOActividad actividadMasCursada(IConexion icon)
+            throws PersistenciaException {
+
+        validarConexion(icon);
 
         List<Registro> lista = leerRegistros();
 
@@ -188,37 +211,34 @@ public class DAORegistrosTxt implements IDAORegistros
             return null;
         }
 
-        String actividadMayor = null;
-        int cantidadMayor = 0;
-
-        List<String> actividades = new ArrayList<>();
+        Map<String, Integer> cantidades = new LinkedHashMap<>();
 
         for (Registro reg : lista) {
 
             String actividad = reg.getActividad();
 
-            if (!actividades.contains(actividad)) {
-                actividades.add(actividad);
+            cantidades.put(
+                actividad,
+                cantidades.getOrDefault(actividad, 0) + 1
+            );
+        }
+
+        String mayorActividad = null;
+        int mayorCantidad = 0;
+
+        for (Map.Entry<String, Integer> entrada :
+                cantidades.entrySet()) {
+
+            if (entrada.getValue() > mayorCantidad) {
+
+                mayorCantidad = entrada.getValue();
+                mayorActividad = entrada.getKey();
             }
         }
 
-        for (String actividad : actividades) {
-
-            int cantidad = 0;
-
-            for (Registro reg : lista) {
-
-                if (reg.getActividad().equals(actividad)) {
-                    cantidad++;
-                }
-            }
-
-            if (cantidad > cantidadMayor) {
-                cantidadMayor = cantidad;
-                actividadMayor = actividad;
-            }
-        }
-
-        return new VOActividad(actividadMayor, cantidadMayor);
+        return new VOActividad(
+            mayorActividad,
+            mayorCantidad
+        );
     }
 }

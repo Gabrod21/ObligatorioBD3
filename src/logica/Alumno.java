@@ -20,12 +20,13 @@ public class Alumno {
     private String apellido;
     private IDAORegistros secuencia;
 
-    public Alumno(int cedula, String nombre, String apellido)
+    public Alumno(int cedula, String nombre, String apellido, IDAORegistros secuencia)
             throws PersistenciaException, LogicaException {
 
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.secuencia = secuencia;
 
         // Cargar la fábrica dinámicamente desde config.properties.
         Properties propiedades = new Properties();

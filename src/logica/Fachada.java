@@ -21,6 +21,7 @@ import persistencia.conexiones.interfaces.IPoolConexiones;
 import persistencia.daos.interfaces.FabricaAbstracta;
 import persistencia.daos.interfaces.IDAOAlumnos;
 
+
 public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
 
     private IPoolConexiones pool;
@@ -69,7 +70,8 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
             Alumno alu = new Alumno(
                 voA.getCedula(),
                 voA.getNombre(),
-                voA.getApellido()
+                voA.getApellido(),
+                fabrica.crearIDAORegistros(voA.getCedula())
             );
 
             idaoalumnos.insert(icon, alu);
