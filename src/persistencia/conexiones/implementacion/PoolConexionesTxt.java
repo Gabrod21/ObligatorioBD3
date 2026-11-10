@@ -2,8 +2,9 @@ package persistencia.conexiones.implementacion;
 
 import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
+import persistencia.conexiones.interfaces.IPoolConexiones;
 
-public class PoolConexionesTxt implements persistencia.conexiones.interfaces.IPoolConexiones {
+public class PoolConexionesTxt implements IPoolConexiones {
 	
 	Monitor monitor = null;
 	
@@ -13,7 +14,7 @@ public class PoolConexionesTxt implements persistencia.conexiones.interfaces.IPo
 		 
 	}
 	
-	public synchronized IConexion obtenerConexion(boolean modifica) throws PersistenciaException  {
+	public IConexion obtenerConexion(boolean modifica) throws PersistenciaException  {
 		
 		if(modifica) {
 			monitor.comienzoEscritura();
@@ -25,7 +26,7 @@ public class PoolConexionesTxt implements persistencia.conexiones.interfaces.IPo
 		return new ConexionTxt(modifica);
 	}
 
-	public synchronized void liberarConexion(IConexion icon, boolean ok) throws PersistenciaException {
+	public void liberarConexion(IConexion icon, boolean ok) throws PersistenciaException {
 	
 		boolean modifica = ((ConexionTxt) icon).getModifica();
 
