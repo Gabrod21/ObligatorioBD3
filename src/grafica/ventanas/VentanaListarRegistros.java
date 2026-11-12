@@ -27,13 +27,13 @@ public class VentanaListarRegistros extends JDialog {
         setSize(540, 400);
         setLocationRelativeTo(padre);
 
-        // Panel principal con márgenes y color de fondo moderno
+        // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
         panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
         panelPrincipal.setBackground(new Color(245, 247, 249));
         setContentPane(panelPrincipal);
 
-        // Panel superior para la búsqueda con un diseño más limpio
+        // Panel superior para la búsqueda
         JPanel panelSuperior = new JPanel(new GridLayout(1, 3, 10, 0));
         panelSuperior.setOpaque(false);
 
@@ -63,7 +63,7 @@ public class VentanaListarRegistros extends JDialog {
         JScrollPane scrollPane = new JScrollPane(tabla);
         panelPrincipal.add(scrollPane, BorderLayout.CENTER);
 
-        // Panel inferior para el botón de cerrar alineado a la derecha
+        // Panel inferior para el botón de cerrar
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         panelBotones.setOpaque(false);
 
@@ -74,7 +74,7 @@ public class VentanaListarRegistros extends JDialog {
 
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
-        // Listeners intactos
+        // Listeners 
         btnBuscar.addActionListener(e -> buscar());
         btnCerrar.addActionListener(e -> dispose());
     }

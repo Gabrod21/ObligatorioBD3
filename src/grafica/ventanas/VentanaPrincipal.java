@@ -22,13 +22,13 @@ public class VentanaPrincipal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Panel principal con márgenes limpios y color de fondo acorde a la paleta
+        // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new GridLayout(9, 1, 0, 10));
         panelPrincipal.setBorder(new EmptyBorder(15, 20, 15, 20));
         panelPrincipal.setBackground(new Color(245, 247, 249));
         setContentPane(panelPrincipal);
 
-        // Creación de botones con íconos de emojis integrados y cursor de mano
+        // Creación de botones con íconos de emojis y cursor de mano
         JButton btnNuevoAlumno = crearBotonEstilizado("👤  Nuevo alumno");
         JButton btnRegistrarNota = crearBotonEstilizado("📝  Registrar nota");
         JButton btnListarAlumnos = crearBotonEstilizado("👥  Listar alumnos");
@@ -87,7 +87,7 @@ public class VentanaPrincipal extends JFrame {
         );
     }
 
-    // Método auxiliar para evitar repetir código de estilos en los botones
+    // Método para evitar repetir código de estilos en los botones
     private JButton crearBotonEstilizado(String texto) {
         JButton boton = new JButton(texto);
         boton.setFocusPainted(false);

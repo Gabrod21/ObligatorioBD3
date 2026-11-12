@@ -23,7 +23,7 @@ public class VentanaRegistrarNota extends JDialog {
         setSize(400, 240);
         setLocationRelativeTo(padre);
 
-        // Panel principal con márgenes y color de fondo moderno
+        // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
         panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
         panelPrincipal.setBackground(new Color(245, 247, 249));
@@ -47,14 +47,14 @@ public class VentanaRegistrarNota extends JDialog {
 
         panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
 
-        // Panel inferior para los botones alineados
+        // Panel inferior para los botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         panelBotones.setOpaque(false);
 
         JButton btnCancelar = new JButton("Cancelar");
         JButton btnRegistrar = new JButton("💾 Registrar");
 
-        // Destacar el botón principal con el color de acento azul y texto blanco
+        // Estilos del botón principal
         btnRegistrar.setBackground(new Color(33, 150, 243));
         btnRegistrar.setForeground(Color.WHITE);
         btnRegistrar.setFocusPainted(false);

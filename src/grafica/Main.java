@@ -29,7 +29,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            // Aplicar el Look and Feel Nimbus para modernizar la UI rápidamente
+            // Se aplica el Estilo Nimbus para mejorar la UI
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());

@@ -24,7 +24,7 @@ public class VentanaObtenerRegistro extends JDialog {
         setSize(400, 220);
         setLocationRelativeTo(padre);
 
-        // Panel principal con márgenes y color de fondo moderno
+        // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
         panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
         panelPrincipal.setBackground(new Color(245, 247, 249));
@@ -44,14 +44,14 @@ public class VentanaObtenerRegistro extends JDialog {
 
         panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
 
-        // Panel inferior para los botones alineados
+        // Panel inferior para los botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         panelBotones.setOpaque(false);
 
         JButton btnCerrar = new JButton("Cerrar");
         JButton btnBuscar = new JButton("🔍 Buscar");
 
-        // Destacar el botón principal con el color de acento azul y texto blanco
+        // Estilos del botón principal
         btnBuscar.setBackground(new Color(33, 150, 243));
         btnBuscar.setForeground(Color.WHITE);
         btnBuscar.setFocusPainted(false);
@@ -65,7 +65,7 @@ public class VentanaObtenerRegistro extends JDialog {
 
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
-        // Listeners intactos
+        // Listeners
         btnBuscar.addActionListener(e -> buscar());
         btnCerrar.addActionListener(e -> dispose());
     }

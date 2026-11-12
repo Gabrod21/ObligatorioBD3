@@ -24,7 +24,7 @@ public class VentanaListarAlumnos extends JDialog {
         setSize(520, 380);
         setLocationRelativeTo(padre);
 
-        // Panel principal con márgenes y color de fondo moderno
+        // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
         panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
         panelPrincipal.setBackground(new Color(245, 247, 249));

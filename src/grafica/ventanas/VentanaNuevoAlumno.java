@@ -23,7 +23,7 @@ public class VentanaNuevoAlumno extends JDialog {
         setSize(400, 240);
         setLocationRelativeTo(padre);
         
-        // Panel principal con márgenes limpios (Padding)
+        // Panel principal
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
         panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
         panelPrincipal.setBackground(new Color(245, 247, 249));
@@ -54,12 +54,12 @@ public class VentanaNuevoAlumno extends JDialog {
         JButton btnCancelar = new JButton("Cancelar");
         JButton btnRegistrar = new JButton("Registrar");
 
-        // Destacar el botón principal con el color de acento azul (#2196F3) y texto blanco
+        // Estilos del botón principal
         btnRegistrar.setBackground(new Color(33, 150, 243));
         btnRegistrar.setForeground(Color.WHITE);
         btnRegistrar.setFocusPainted(false);
 
-        // Cambiar el cursor a la "mano" (pointer) en ambos botones
+        // Cambiar el cursor a pointer (mano)
         btnRegistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 

@@ -50,7 +50,7 @@ public class VentanaContarAlumnos extends JDialog {
         JButton btnCerrar = new JButton("Cerrar");
         JButton btnConsultar = new JButton("🔍 Consultar");
 
-        // Destacar el botón principal con el color de acento azul y texto blanco
+        // Estilos del botón principal
         btnConsultar.setBackground(new Color(33, 150, 243));
         btnConsultar.setForeground(Color.WHITE);
         btnConsultar.setFocusPainted(false);
@@ -64,7 +64,7 @@ public class VentanaContarAlumnos extends JDialog {
 
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
-        // Listeners intactos
+        // Listeners
         btnConsultar.addActionListener(e -> consultar());
         btnCerrar.addActionListener(e -> dispose());
     }

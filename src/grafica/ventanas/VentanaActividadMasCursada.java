@@ -24,7 +24,7 @@ public class VentanaActividadMasCursada extends JDialog {
         setSize(380, 200);
         setLocationRelativeTo(padre);
 
-        // Panel principal con márgenes y color de fondo moderno
+        // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
         panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
         panelPrincipal.setBackground(new Color(245, 247, 249));
@@ -47,7 +47,7 @@ public class VentanaActividadMasCursada extends JDialog {
         JButton btnCerrar = new JButton("Cerrar");
         JButton btnConsultar = new JButton("🔍 Consultar");
 
-        // Destacar el botón principal con el color de acento azul y texto blanco
+        // Estilos del botón principal
         btnConsultar.setBackground(new Color(33, 150, 243));
         btnConsultar.setForeground(Color.WHITE);
         btnConsultar.setFocusPainted(false);
@@ -61,7 +61,7 @@ public class VentanaActividadMasCursada extends JDialog {
 
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
-        // Listeners intactos
+        // Listeners
         btnConsultar.addActionListener(e -> consultar());
         btnCerrar.addActionListener(e -> dispose());
     }
