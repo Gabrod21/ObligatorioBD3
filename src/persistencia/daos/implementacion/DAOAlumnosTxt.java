@@ -1,3 +1,4 @@
+
 package persistencia.daos.implementacion;
 
 import java.util.ArrayList;
@@ -9,21 +10,49 @@ import logica.Alumno;
 import logica.LogicaException;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
+
 import persistencia.conexiones.PersistenciaException;
+import persistencia.conexiones.implementacion.ConexionTxt;
 import persistencia.conexiones.interfaces.IConexion;
 import persistencia.daos.interfaces.IDAOAlumnos;
 
-public class DAOAlumnosTxt implements IDAOAlumnos 
-{
+public class DAOAlumnosTxt implements IDAOAlumnos {
+
     private ManejoTxt manejo;
 
-    public DAOAlumnosTxt() throws PersistenciaException
-    {
+    public DAOAlumnosTxt() throws PersistenciaException {
         manejo = new ManejoTxt();
     }
 
-    // Lee todos los alumnos del archivo alumnos.txt
-    private List<Alumno> leerAlumnos() throws PersistenciaException, LogicaException {
+    // Verifica que sea una conexión TXT
+    private void validarConexion(IConexion icon)
+            throws PersistenciaException {
+
+        if (!(icon instanceof ConexionTxt)) {
+            throw new PersistenciaException(
+                "Se requiere una conexion TXT"
+            );
+        }
+    }
+
+    // Verifica que se permita modificar
+    private void validarModificacion(IConexion icon)
+            throws PersistenciaException {
+
+        validarConexion(icon);
+
+        ConexionTxt conexion = (ConexionTxt) icon;
+
+        if (!conexion.getModifica()) {
+            throw new PersistenciaException(
+                "La conexion no permite modificar archivos"
+            );
+        }
+    }
+
+    // Lee todos los alumnos
+    private List<Alumno> leerAlumnos()
+            throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = new ArrayList<>();
 
@@ -34,6 +63,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
         List<String> lineas = manejo.leerTxt("alumnos.txt");
 
         try {
+
             for (String linea : lineas) {
 
                 if (linea.trim().isEmpty()) {
@@ -52,14 +82,18 @@ public class DAOAlumnosTxt implements IDAOAlumnos
                 String nombre = datos[1].trim();
                 String apellido = datos[2].trim();
 
-                Alumno alu = null;
-				alu = new Alumno(cedula,nombre,apellido);
-				
+                // Cada alumno tiene su propio DAO de registros TXT
+                Alumno alu = new Alumno(
+                    cedula,
+                    nombre,
+                    apellido
+                );
 
                 lista.add(alu);
             }
 
         } catch (NumberFormatException e) {
+
             throw new PersistenciaException(
                 "Error en los datos de alumnos.txt"
             );
@@ -68,12 +102,14 @@ public class DAOAlumnosTxt implements IDAOAlumnos
         return lista;
     }
 
-    // Guarda todos los alumnos ordenados por cédula
+    // Guarda todos los alumnos ordenados por cedula
     private void guardarAlumnos(List<Alumno> lista)
             throws PersistenciaException {
 
-        Collections.sort(lista,
-            Comparator.comparingInt(Alumno::getCedula));
+        Collections.sort(
+            lista,
+            Comparator.comparingInt(Alumno::getCedula)
+        );
 
         StringBuilder texto = new StringBuilder();
 
@@ -105,6 +141,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
         List<String> lineas = manejo.leerTxt(archivo);
 
         try {
+
             for (String linea : lineas) {
 
                 if (linea.trim().isEmpty()) {
@@ -119,7 +156,6 @@ public class DAOAlumnosTxt implements IDAOAlumnos
                     );
                 }
 
-                // Validamos que número y nota sean enteros
                 Integer.parseInt(datos[0].trim());
                 Integer.parseInt(datos[2].trim());
 
@@ -127,6 +163,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
             }
 
         } catch (NumberFormatException e) {
+
             throw new PersistenciaException(
                 "Error en los datos de " + archivo
             );
@@ -159,6 +196,8 @@ public class DAOAlumnosTxt implements IDAOAlumnos
     public boolean member(IConexion icon, int cedA)
             throws PersistenciaException, LogicaException {
 
+        validarConexion(icon);
+
         List<Alumno> lista = leerAlumnos();
 
         for (Alumno alu : lista) {
@@ -175,10 +214,14 @@ public class DAOAlumnosTxt implements IDAOAlumnos
     public void insert(IConexion icon, Alumno alu)
             throws PersistenciaException, LogicaException {
 
+        validarModificacion(icon);
+
         List<Alumno> lista = leerAlumnos();
 
         if (member(icon, alu.getCedula())) {
-            throw new PersistenciaException("El alumno ya existe");
+            throw new PersistenciaException(
+                "El alumno ya existe"
+            );
         }
 
         lista.add(alu);
@@ -197,6 +240,8 @@ public class DAOAlumnosTxt implements IDAOAlumnos
     public Alumno find(IConexion icon, int cedA)
             throws PersistenciaException, LogicaException {
 
+        validarConexion(icon);
+
         List<Alumno> lista = leerAlumnos();
 
         for (Alumno alu : lista) {
@@ -213,12 +258,16 @@ public class DAOAlumnosTxt implements IDAOAlumnos
     public Boolean esVacio(IConexion icon)
             throws PersistenciaException, LogicaException {
 
+        validarConexion(icon);
+
         return leerAlumnos().isEmpty();
     }
 
     @Override
     public List<VOAlumno> listarAlumnos(IConexion icon)
             throws PersistenciaException, LogicaException {
+
+        validarConexion(icon);
 
         List<VOAlumno> resultado = new ArrayList<>();
 
@@ -242,9 +291,12 @@ public class DAOAlumnosTxt implements IDAOAlumnos
     public VOAlumnoProm alumnoMayorPromedio(IConexion icon)
             throws PersistenciaException, LogicaException {
 
+        validarConexion(icon);
+
         List<Alumno> lista = leerAlumnos();
 
         VOAlumnoProm mayor = null;
+
         double mayorPromedio = -1;
 
         for (Alumno alu : lista) {
@@ -279,6 +331,8 @@ public class DAOAlumnosTxt implements IDAOAlumnos
     public int contarAlumnos(IConexion icon, String act, int nota)
             throws PersistenciaException, LogicaException {
 
+        validarConexion(icon);
+
         List<Alumno> lista = leerAlumnos();
 
         int contador = 0;
@@ -291,6 +345,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos
             for (String[] datos : registros) {
 
                 String actividad = datos[1].trim();
+
                 int notaRegistro =
                     Integer.parseInt(datos[2].trim());
 

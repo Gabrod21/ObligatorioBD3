@@ -66,8 +66,9 @@ public class PoolConexiones implements IPoolConexiones {
 
             // si hay alguna disponible, la asigno:
             if (tope > -1) {
-                conexion = (IConexion) conexiones[tope]; //le asigno la ultima disponible
-                Connection con = conexion.getConnection();
+            	Conexion conexionMySQL = conexiones[tope];
+            	Connection con = conexionMySQL.getConnection();
+            	conexion = conexionMySQL;
                 con.setAutoCommit(!updates);
                 conexiones[tope] = null; //por las dudas
                 tope--; //deja de estar disponible
@@ -99,10 +100,13 @@ public class PoolConexiones implements IPoolConexiones {
     }
 
     @Override
-    public synchronized void liberarConexion(IConexion conexion, boolean transaccionOK) throws PersistenciaException {
+    public synchronized void liberarConexion(
+            IConexion conexion, boolean transaccionOK)
+            throws PersistenciaException {
 
         try {
-            Connection con = conexion.getConnection();
+            Conexion conexionMySQL = (Conexion) conexion;
+            Connection con = conexionMySQL.getConnection();
 
             if (!con.getAutoCommit()) {
                 if (transaccionOK) {
@@ -110,13 +114,12 @@ public class PoolConexiones implements IPoolConexiones {
                 } else {
                     con.rollback();
                 }
-
             }
 
             tope++;
-            conexiones[tope] = (Conexion) conexion;
+            conexiones[tope] = conexionMySQL;
 
-            // Notifico a hilo en espera que se libero una
+            // Notifico a un hilo que estaba esperando
             notify();
 
         } catch (SQLException e) {

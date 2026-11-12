@@ -20,12 +20,13 @@ import persistencia.conexiones.interfaces.IPoolConexiones;
 
 import persistencia.daos.interfaces.FabricaAbstracta;
 import persistencia.daos.interfaces.IDAOAlumnos;
-import persistencia.daos.interfaces.IDAORegistros;
+
 
 public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
 
     private IPoolConexiones pool;
     private FabricaAbstracta fabrica;
+    private IDAOAlumnos idaoalumnos;
 
     public Fachada() throws RemoteException {
         super();
@@ -45,6 +46,7 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
                     .newInstance();
             
             this.pool = fabrica.crearPoolConexiones();
+            this.idaoalumnos = fabrica.crearIDAOAlumnos();
 
         } catch (Exception e) {
             throw new RemoteException(
@@ -60,9 +62,8 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
         boolean transaccionOK = false;
 
         try {
-            IDAOAlumnos dao = fabrica.crearIDAOAlumnos();
 
-            if (dao.member(icon, voA.getCedula())) {
+            if (idaoalumnos.member(icon, voA.getCedula())) {
                 throw new LogicaException("El alumno ya existe");
             }
 
@@ -72,7 +73,7 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
                 voA.getApellido()
             );
 
-            dao.insert(icon, alu);
+            idaoalumnos.insert(icon, alu);
 
             transaccionOK = true;
 
@@ -88,25 +89,26 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
         boolean transaccionOK = false;
 
         try {
-            IDAOAlumnos daoAlumnos = fabrica.crearIDAOAlumnos();
-
-            if (!daoAlumnos.member(icon, cedA)) {
+            if (!idaoalumnos.member(icon, cedA)) {
                 throw new LogicaException("El alumno no existe");
             }
+            else {
+            	
+            	Alumno alu = idaoalumnos.find(icon, cedA);
+            	int cantidadRegistros = alu.cantidadRegistros(icon);
+            	
+            	Registro reg = new Registro(
+                        cantidadRegistros + 1,
+                        voR.getNota(),
+                        voR.getActividad()
+                    );
+            	alu.agregarRegistro(icon, reg);
 
-            IDAORegistros daoRegistros = fabrica.crearIDAORegistros(cedA);
+                transaccionOK = true;
+            	
+            }
 
-            int numero = daoRegistros.largo(icon) + 1;
 
-            Registro reg = new Registro(
-                numero,
-                voR.getNota(),
-                voR.getActividad()
-            );
-
-            daoRegistros.insback(icon, reg);
-
-            transaccionOK = true;
 
         } finally {
             pool.liberarConexion(icon, transaccionOK);
@@ -120,9 +122,8 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
         boolean transaccionOK = false;
 
         try {
-            IDAOAlumnos dao = fabrica.crearIDAOAlumnos();
 
-            List<VOAlumno> lista = dao.listarAlumnos(icon);
+            List<VOAlumno> lista = idaoalumnos.listarAlumnos(icon);
 
             transaccionOK = true;
             return lista;
@@ -137,29 +138,27 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
 
         IConexion icon = pool.obtenerConexion(false);
         boolean transaccionOK = false;
+        VORegistro vor = null;
 
         try {
-            IDAOAlumnos daoAlumnos = fabrica.crearIDAOAlumnos();
 
-            if (!daoAlumnos.member(icon, cedA)) {
+            if (!idaoalumnos.member(icon, cedA)) {
                 throw new LogicaException("El alumno no existe");
             }
-
-            IDAORegistros daoRegistros = fabrica.crearIDAORegistros(cedA);
-
-            Registro reg = daoRegistros.kesimo(icon, numR);
-
-            if (reg == null) {
-                throw new LogicaException("El registro no existe");
+            else {
+            	
+            	Alumno alu = idaoalumnos.find(icon, cedA);
+            	vor = alu.obtenerRegistro(icon, numR);
+            	
+            	if (vor == null) {
+                    throw new LogicaException("El registro no existe");
+                }
+            	
             }
 
-            VORegistro voR = new VORegistro(
-                reg.getActividad(),
-                reg.getNota()
-            );
-
+            
             transaccionOK = true;
-            return voR;
+            return vor;
 
         } finally {
             pool.liberarConexion(icon, transaccionOK);
@@ -171,18 +170,19 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
 
         IConexion icon = pool.obtenerConexion(false);
         boolean transaccionOK = false;
+        List<VORegistroListado> lista = null;
 
         try {
-            IDAOAlumnos daoAlumnos = fabrica.crearIDAOAlumnos();
 
-            if (!daoAlumnos.member(icon, cedA)) {
+            if (!idaoalumnos.member(icon, cedA)) {
                 throw new LogicaException("El alumno no existe");
             }
-
-            IDAORegistros daoRegistros = fabrica.crearIDAORegistros(cedA);
-
-            List<VORegistroListado> lista =
-                daoRegistros.listarRegistros(icon);
+            else {
+            	
+            	Alumno alu = idaoalumnos.find(icon, cedA);
+            	lista = alu.listarRegistros(icon);
+            }
+          
 
             transaccionOK = true;
             return lista;
@@ -197,26 +197,27 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
 
         IConexion icon = pool.obtenerConexion(false);
         boolean transaccionOK = false;
+        double promedioNotas = 0;
 
         try {
-            IDAOAlumnos daoAlumnos = fabrica.crearIDAOAlumnos();
-
-            if (!daoAlumnos.member(icon, cedA)) {
+            if (!idaoalumnos.member(icon, cedA)) {
                 throw new LogicaException("El alumno no existe");
             }
-
-            IDAORegistros daoRegistros = fabrica.crearIDAORegistros(cedA);
-
-            if (daoRegistros.largo(icon) == 0) {
-                throw new LogicaException(
-                    "No existen registros para el alumno"
-                );
+            else {
+            	
+            	Alumno alu = idaoalumnos.find(icon, cedA);
+            	
+            	if (alu.cantidadRegistros(icon) == 0) {
+            		
+            		throw new LogicaException("No hay registros para el alumno");
+            		
+            	}
+            	promedioNotas = alu.promedioNotas(icon);
+            	
             }
 
-            double promedio = daoRegistros.promedioNotas(icon);
-
             transaccionOK = true;
-            return promedio;
+            return promedioNotas;
 
         } finally {
             pool.liberarConexion(icon, transaccionOK);
@@ -230,13 +231,12 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
         boolean transaccionOK = false;
 
         try {
-            IDAOAlumnos dao = fabrica.crearIDAOAlumnos();
 
-            if (dao.esVacio(icon)) {
+            if (idaoalumnos.esVacio(icon)) {
                 throw new LogicaException("No hay alumnos");
             }
 
-            VOAlumnoProm alu = dao.alumnoMayorPromedio(icon);
+            VOAlumnoProm alu = idaoalumnos.alumnoMayorPromedio(icon);
 
             if (alu == null) {
                 throw new LogicaException(
@@ -259,9 +259,8 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
         boolean transaccionOK = false;
 
         try {
-            IDAOAlumnos dao = fabrica.crearIDAOAlumnos();
 
-            int cantidad = dao.contarAlumnos(icon, act, nota);
+            int cantidad = idaoalumnos.contarAlumnos(icon, act, nota);
 
             transaccionOK = true;
             return cantidad;
@@ -276,27 +275,30 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
 
         IConexion icon = pool.obtenerConexion(false);
         boolean transaccionOK = false;
-
+        VOActividad actMasCursada = null;
+        
         try {
-            IDAOAlumnos daoAlumnos = fabrica.crearIDAOAlumnos();
 
-            if (!daoAlumnos.member(icon, cedA)) {
+            if (!idaoalumnos.member(icon, cedA)) {
                 throw new LogicaException("El alumno no existe");
             }
-
-            IDAORegistros daoRegistros = fabrica.crearIDAORegistros(cedA);
-
-            if (daoRegistros.largo(icon) == 0) {
-                throw new LogicaException(
-                    "El alumno no tiene actividades registradas"
-                );
+            else {
+            	            	
+            	Alumno alu = idaoalumnos.find(icon, cedA);
+            	
+            	if (alu.cantidadRegistros(icon) == 0) {
+            		throw new LogicaException("El alumno no tiene registros");
+            	}
+            	else {
+            		actMasCursada = alu.actividadMasCursada(icon);
+            	}
+            	
+            	
             }
 
-            VOActividad actividad =
-                daoRegistros.actividadMasCursada(icon);
 
             transaccionOK = true;
-            return actividad;
+            return actMasCursada;
 
         } finally {
             pool.liberarConexion(icon, transaccionOK);

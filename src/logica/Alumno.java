@@ -26,6 +26,7 @@ public class Alumno {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.secuencia = secuencia;
 
         // Cargar la fábrica dinámicamente desde config.properties.
         Properties propiedades = new Properties();

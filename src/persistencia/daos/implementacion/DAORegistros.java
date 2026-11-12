@@ -13,6 +13,7 @@ import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.interfaces.IConexion;
 import persistencia.consultas.Consultas;
 import persistencia.daos.interfaces.IDAORegistros;
+import persistencia.conexiones.implementacion.Conexion;
 
 public class DAORegistros implements IDAORegistros {
 
@@ -29,7 +30,7 @@ public class DAORegistros implements IDAORegistros {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(
+            ps = ((Conexion) icon).getConnection().prepareStatement(
                 consultas.numeroUltimoRegistroDeAlumno()
             );
 
@@ -68,7 +69,7 @@ public class DAORegistros implements IDAORegistros {
         PreparedStatement ps = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(
+            ps = ((Conexion) icon).getConnection().prepareStatement(
                 consultas.insertarNota()
             );
 
@@ -98,7 +99,7 @@ public class DAORegistros implements IDAORegistros {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(
+            ps = ((Conexion) icon).getConnection().prepareStatement(
                 consultas.obtenerRegistro()
             );
 
@@ -147,7 +148,7 @@ public class DAORegistros implements IDAORegistros {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(
+            ps = ((Conexion) icon).getConnection().prepareStatement(
                 consultas.listarRegistros()
             );
 
@@ -191,7 +192,7 @@ public class DAORegistros implements IDAORegistros {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(
+            ps = ((Conexion) icon).getConnection().prepareStatement(
                 consultas.promedioNotas()
             );
 
@@ -230,7 +231,7 @@ public class DAORegistros implements IDAORegistros {
         ResultSet rs = null;
 
         try {
-            ps = icon.getConnection().prepareStatement(
+            ps = ((Conexion) icon).getConnection().prepareStatement(
                 consultas.actividadMasCursada()
             );
 
