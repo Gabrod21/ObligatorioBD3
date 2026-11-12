@@ -1,8 +1,12 @@
-
 package grafica.ventanas;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import grafica.controladores.Controlador;
 import logica.valueObjects.VORegistro;
@@ -17,24 +21,51 @@ public class VentanaObtenerRegistro extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(350, 200);
+        setSize(400, 220);
         setLocationRelativeTo(padre);
-        setLayout(new GridLayout(4, 2, 5, 5));
 
-        add(new JLabel("Cédula del alumno:"));
+        // Panel principal con márgenes y color de fondo moderno
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
+        panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panelPrincipal.setBackground(new Color(245, 247, 249));
+        setContentPane(panelPrincipal);
+
+        // Panel central para las etiquetas y campos de texto
+        JPanel panelFormulario = new JPanel(new GridLayout(2, 2, 10, 12));
+        panelFormulario.setOpaque(false);
+
+        panelFormulario.add(new JLabel("Cédula del alumno:"));
         txtCedula = new JTextField();
-        add(txtCedula);
+        panelFormulario.add(txtCedula);
 
-        add(new JLabel("Número de registro:"));
+        panelFormulario.add(new JLabel("Número de registro:"));
         txtNumero = new JTextField();
-        add(txtNumero);
+        panelFormulario.add(txtNumero);
 
-        JButton btnBuscar = new JButton("Buscar");
+        panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
+
+        // Panel inferior para los botones alineados
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        panelBotones.setOpaque(false);
+
         JButton btnCerrar = new JButton("Cerrar");
+        JButton btnBuscar = new JButton("🔍 Buscar");
 
-        add(btnBuscar);
-        add(btnCerrar);
+        // Destacar el botón principal con el color de acento azul y texto blanco
+        btnBuscar.setBackground(new Color(33, 150, 243));
+        btnBuscar.setForeground(Color.WHITE);
+        btnBuscar.setFocusPainted(false);
 
+        // Cursores en forma de mano
+        btnBuscar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        panelBotones.add(btnCerrar);
+        panelBotones.add(btnBuscar);
+
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+
+        // Listeners intactos
         btnBuscar.addActionListener(e -> buscar());
         btnCerrar.addActionListener(e -> dispose());
     }

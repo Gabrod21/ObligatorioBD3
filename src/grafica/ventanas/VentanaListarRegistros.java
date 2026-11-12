@@ -1,10 +1,13 @@
-
 package grafica.ventanas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import grafica.controladores.Controlador;
@@ -21,35 +24,57 @@ public class VentanaListarRegistros extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(500, 350);
+        setSize(540, 400);
         setLocationRelativeTo(padre);
-        setLayout(new BorderLayout());
 
-        JPanel panelSuperior = new JPanel(new GridLayout(1, 3, 5, 5));
+        // Panel principal con márgenes y color de fondo moderno
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
+        panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panelPrincipal.setBackground(new Color(245, 247, 249));
+        setContentPane(panelPrincipal);
+
+        // Panel superior para la búsqueda con un diseño más limpio
+        JPanel panelSuperior = new JPanel(new GridLayout(1, 3, 10, 0));
+        panelSuperior.setOpaque(false);
 
         panelSuperior.add(new JLabel("Cédula:"));
         txtCedula = new JTextField();
         panelSuperior.add(txtCedula);
 
-        JButton btnBuscar = new JButton("Buscar");
+        JButton btnBuscar = new JButton("🔍 Buscar");
+        btnBuscar.setBackground(new Color(33, 150, 243));
+        btnBuscar.setForeground(Color.WHITE);
+        btnBuscar.setFocusPainted(false);
+        btnBuscar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         panelSuperior.add(btnBuscar);
 
-        add(panelSuperior, BorderLayout.NORTH);
+        panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
 
         modelo = new DefaultTableModel(
             new String[]{"Número", "Actividad", "Nota"}, 0
         ) {
+            @Override
             public boolean isCellEditable(int fila, int columna) {
                 return false;
             }
         };
 
         JTable tabla = new JTable(modelo);
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        panelPrincipal.add(scrollPane, BorderLayout.CENTER);
+
+        // Panel inferior para el botón de cerrar alineado a la derecha
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        panelBotones.setOpaque(false);
 
         JButton btnCerrar = new JButton("Cerrar");
-        add(btnCerrar, BorderLayout.SOUTH);
+        btnCerrar.setFocusPainted(false);
+        btnCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        panelBotones.add(btnCerrar);
 
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+
+        // Listeners intactos
         btnBuscar.addActionListener(e -> buscar());
         btnCerrar.addActionListener(e -> dispose());
     }

@@ -1,8 +1,12 @@
-
 package grafica.ventanas;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import grafica.controladores.Controlador;
 
@@ -16,28 +20,55 @@ public class VentanaNuevoAlumno extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(350, 220);
+        setSize(400, 240);
         setLocationRelativeTo(padre);
-        setLayout(new GridLayout(4, 2, 5, 5));
+        
+        // Panel principal con márgenes limpios (Padding)
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
+        panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panelPrincipal.setBackground(new Color(245, 247, 249));
+        setContentPane(panelPrincipal);
 
-        add(new JLabel("Cédula:"));
+        // Panel central para las etiquetas y campos de texto
+        JPanel panelFormulario = new JPanel(new GridLayout(3, 2, 10, 12));
+        panelFormulario.setOpaque(false);
+
+        panelFormulario.add(new JLabel("Cédula:"));
         txtCedula = new JTextField();
-        add(txtCedula);
+        panelFormulario.add(txtCedula);
 
-        add(new JLabel("Nombre:"));
+        panelFormulario.add(new JLabel("Nombre:"));
         txtNombre = new JTextField();
-        add(txtNombre);
+        panelFormulario.add(txtNombre);
 
-        add(new JLabel("Apellido:"));
+        panelFormulario.add(new JLabel("Apellido:"));
         txtApellido = new JTextField();
-        add(txtApellido);
+        panelFormulario.add(txtApellido);
 
-        JButton btnRegistrar = new JButton("Registrar");
+        panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
+
+        // Panel inferior para los botones alineados
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        panelBotones.setOpaque(false);
+
         JButton btnCancelar = new JButton("Cancelar");
+        JButton btnRegistrar = new JButton("Registrar");
 
-        add(btnRegistrar);
-        add(btnCancelar);
+        // Destacar el botón principal con el color de acento azul (#2196F3) y texto blanco
+        btnRegistrar.setBackground(new Color(33, 150, 243));
+        btnRegistrar.setForeground(Color.WHITE);
+        btnRegistrar.setFocusPainted(false);
 
+        // Cambiar el cursor a la "mano" (pointer) en ambos botones
+        btnRegistrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        panelBotones.add(btnCancelar);
+        panelBotones.add(btnRegistrar);
+
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+
+        // Listeners
         btnRegistrar.addActionListener(e -> registrar());
         btnCancelar.addActionListener(e -> dispose());
     }

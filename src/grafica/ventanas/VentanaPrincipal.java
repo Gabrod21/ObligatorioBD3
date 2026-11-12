@@ -1,10 +1,12 @@
-
 package grafica.ventanas;
 
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import grafica.controladores.Controlador;
 
@@ -13,41 +15,41 @@ public class VentanaPrincipal extends JFrame {
     private Controlador controlador;
 
     public VentanaPrincipal(Controlador controlador) {
-
         this.controlador = controlador;
 
         setTitle("Obligatorio grupo 1");
-        setSize(400, 450);
+        setSize(420, 520);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(9, 1, 10, 10));
+        // Panel principal con márgenes limpios y color de fondo acorde a la paleta
+        JPanel panelPrincipal = new JPanel(new GridLayout(9, 1, 0, 10));
+        panelPrincipal.setBorder(new EmptyBorder(15, 20, 15, 20));
+        panelPrincipal.setBackground(new Color(245, 247, 249));
+        setContentPane(panelPrincipal);
 
-        JButton btnNuevoAlumno = new JButton("Nuevo alumno");
-        JButton btnRegistrarNota = new JButton("Registrar nota");
-        JButton btnListarAlumnos = new JButton("Listar alumnos");
-        JButton btnObtenerRegistro = new JButton("Obtener registro");
-        JButton btnListarRegistros = new JButton("Listar registros");
-        JButton btnPromedio = new JButton("Promedio de notas");
-        JButton btnMayorPromedio = new JButton("Alumno con mayor promedio");
-        JButton btnContarAlumnos = new JButton("Contar alumnos");
-        JButton btnActividadMasCursada = new JButton("Actividad más cursada");
+        // Creación de botones con íconos de emojis integrados y cursor de mano
+        JButton btnNuevoAlumno = crearBotonEstilizado("👤  Nuevo alumno");
+        JButton btnRegistrarNota = crearBotonEstilizado("📝  Registrar nota");
+        JButton btnListarAlumnos = crearBotonEstilizado("👥  Listar alumnos");
+        JButton btnObtenerRegistro = crearBotonEstilizado("📥  Obtener registro");
+        JButton btnListarRegistros = crearBotonEstilizado("📋  Listar registros");
+        JButton btnPromedio = crearBotonEstilizado("📊  Promedio de notas");
+        JButton btnMayorPromedio = crearBotonEstilizado("⭐  Alumno con mayor promedio");
+        JButton btnContarAlumnos = crearBotonEstilizado("🔢  Contar alumnos");
+        JButton btnActividadMasCursada = crearBotonEstilizado("📈  Actividad más cursada");
 
-        panel.add(btnNuevoAlumno);
-        panel.add(btnRegistrarNota);
-        panel.add(btnListarAlumnos);
-        panel.add(btnObtenerRegistro);
-        panel.add(btnListarRegistros);
-        panel.add(btnPromedio);
-        panel.add(btnMayorPromedio);
-        panel.add(btnContarAlumnos);
-        panel.add(btnActividadMasCursada);
-
-        add(panel);
+        panelPrincipal.add(btnNuevoAlumno);
+        panelPrincipal.add(btnRegistrarNota);
+        panelPrincipal.add(btnListarAlumnos);
+        panelPrincipal.add(btnObtenerRegistro);
+        panelPrincipal.add(btnListarRegistros);
+        panelPrincipal.add(btnPromedio);
+        panelPrincipal.add(btnMayorPromedio);
+        panelPrincipal.add(btnContarAlumnos);
+        panelPrincipal.add(btnActividadMasCursada);
 
         // Acciones de los botones
-
         btnNuevoAlumno.addActionListener(e ->
             new VentanaNuevoAlumno(this, controlador).setVisible(true)
         );
@@ -73,8 +75,8 @@ public class VentanaPrincipal extends JFrame {
         );
 
         btnMayorPromedio.addActionListener(e ->
-        new VentanaAlumnoMayorPromedio(this, controlador)
-    );
+            new VentanaAlumnoMayorPromedio(this, controlador)
+        );
 
         btnContarAlumnos.addActionListener(e ->
             new VentanaContarAlumnos(this, controlador).setVisible(true)
@@ -83,5 +85,13 @@ public class VentanaPrincipal extends JFrame {
         btnActividadMasCursada.addActionListener(e ->
             new VentanaActividadMasCursada(this, controlador).setVisible(true)
         );
+    }
+
+    // Método auxiliar para evitar repetir código de estilos en los botones
+    private JButton crearBotonEstilizado(String texto) {
+        JButton boton = new JButton(texto);
+        boton.setFocusPainted(false);
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return boton;
     }
 }

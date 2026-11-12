@@ -1,8 +1,12 @@
-
 package grafica.ventanas;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import grafica.controladores.Controlador;
 
@@ -16,20 +20,47 @@ public class VentanaPromedioNotas extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(350, 170);
+        setSize(380, 200);
         setLocationRelativeTo(padre);
-        setLayout(new GridLayout(3, 2, 5, 5));
 
-        add(new JLabel("Cédula del alumno:"));
+        // Panel principal con márgenes y color de fondo moderno
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
+        panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panelPrincipal.setBackground(new Color(245, 247, 249));
+        setContentPane(panelPrincipal);
+
+        // Panel central para el formulario de entrada
+        JPanel panelFormulario = new JPanel(new GridLayout(1, 2, 10, 0));
+        panelFormulario.setOpaque(false);
+
+        panelFormulario.add(new JLabel("Cédula del alumno:"));
         txtCedula = new JTextField();
-        add(txtCedula);
+        panelFormulario.add(txtCedula);
 
-        JButton btnConsultar = new JButton("Consultar");
+        panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
+
+        // Panel inferior para los botones alineados
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        panelBotones.setOpaque(false);
+
         JButton btnCerrar = new JButton("Cerrar");
+        JButton btnConsultar = new JButton("🔍 Consultar");
 
-        add(btnConsultar);
-        add(btnCerrar);
+        // Destacar el botón principal con el color de acento azul y texto blanco
+        btnConsultar.setBackground(new Color(33, 150, 243));
+        btnConsultar.setForeground(Color.WHITE);
+        btnConsultar.setFocusPainted(false);
 
+        // Cursores en forma de mano
+        btnConsultar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        panelBotones.add(btnCerrar);
+        panelBotones.add(btnConsultar);
+
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+
+        // Listeners intactos
         btnConsultar.addActionListener(e -> consultar());
         btnCerrar.addActionListener(e -> dispose());
     }

@@ -1,9 +1,12 @@
-
 package grafica.ventanas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import grafica.controladores.Controlador;
@@ -18,23 +21,38 @@ public class VentanaListarAlumnos extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(500, 350);
+        setSize(520, 380);
         setLocationRelativeTo(padre);
-        setLayout(new BorderLayout());
+
+        // Panel principal con márgenes y color de fondo moderno
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
+        panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panelPrincipal.setBackground(new Color(245, 247, 249));
+        setContentPane(panelPrincipal);
 
         String[] columnas = {"Cédula", "Nombre", "Apellido"};
 
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            @Override
             public boolean isCellEditable(int fila, int columna) {
                 return false;
             }
         };
 
         JTable tabla = new JTable(modelo);
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        panelPrincipal.add(scrollPane, BorderLayout.CENTER);
+
+        // Panel inferior para el botón alineado limpiamente
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        panelBotones.setOpaque(false);
 
         JButton btnCerrar = new JButton("Cerrar");
-        add(btnCerrar, BorderLayout.SOUTH);
+        btnCerrar.setFocusPainted(false);
+        btnCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        panelBotones.add(btnCerrar);
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
         btnCerrar.addActionListener(e -> dispose());
 
