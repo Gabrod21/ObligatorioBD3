@@ -3,6 +3,7 @@ package grafica.ventanas;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.*;
@@ -20,8 +21,9 @@ public class VentanaContarAlumnos extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(400, 220);
+        setSize(400, 200);
         setLocationRelativeTo(padre);
+        setResizable(false); // Ventana no redimensionable
 
         // Panel principal con márgenes y color de fondo moderno
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
@@ -35,10 +37,12 @@ public class VentanaContarAlumnos extends JDialog {
 
         panelFormulario.add(new JLabel("Actividad:"));
         txtActividad = new JTextField();
+        txtActividad.setPreferredSize(new Dimension(150, 30)); // Altura uniforme
         panelFormulario.add(txtActividad);
 
         panelFormulario.add(new JLabel("Nota:"));
         txtNota = new JTextField();
+        txtNota.setPreferredSize(new Dimension(150, 30)); // Altura uniforme
         panelFormulario.add(txtNota);
 
         panelPrincipal.add(panelFormulario, BorderLayout.CENTER);

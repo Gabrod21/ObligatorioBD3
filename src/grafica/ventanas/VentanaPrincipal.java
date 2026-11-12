@@ -16,11 +16,11 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal(Controlador controlador) {
         this.controlador = controlador;
-
         setTitle("Obligatorio grupo 1");
         setSize(420, 520);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false); // Ventana principal no redimensionable
 
         // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new GridLayout(9, 1, 0, 10));
@@ -53,35 +53,27 @@ public class VentanaPrincipal extends JFrame {
         btnNuevoAlumno.addActionListener(e ->
             new VentanaNuevoAlumno(this, controlador).setVisible(true)
         );
-
         btnRegistrarNota.addActionListener(e ->
             new VentanaRegistrarNota(this, controlador).setVisible(true)
         );
-
         btnListarAlumnos.addActionListener(e ->
             new VentanaListarAlumnos(this, controlador).setVisible(true)
         );
-
         btnObtenerRegistro.addActionListener(e ->
             new VentanaObtenerRegistro(this, controlador).setVisible(true)
         );
-
         btnListarRegistros.addActionListener(e ->
             new VentanaListarRegistros(this, controlador).setVisible(true)
         );
-
         btnPromedio.addActionListener(e ->
             new VentanaPromedioNotas(this, controlador).setVisible(true)
         );
-
         btnMayorPromedio.addActionListener(e ->
             new VentanaAlumnoMayorPromedio(this, controlador)
         );
-
         btnContarAlumnos.addActionListener(e ->
             new VentanaContarAlumnos(this, controlador).setVisible(true)
         );
-
         btnActividadMasCursada.addActionListener(e ->
             new VentanaActividadMasCursada(this, controlador).setVisible(true)
         );

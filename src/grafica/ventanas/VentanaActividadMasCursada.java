@@ -3,6 +3,7 @@ package grafica.ventanas;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.*;
@@ -21,8 +22,9 @@ public class VentanaActividadMasCursada extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(380, 200);
+        setSize(380, 150);
         setLocationRelativeTo(padre);
+        setResizable(false); // Ventana no redimensionable
 
         // Panel principal con márgenes y color de fondo
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 15));
@@ -36,6 +38,7 @@ public class VentanaActividadMasCursada extends JDialog {
 
         panelFormulario.add(new JLabel("Cédula del alumno:"));
         txtCedula = new JTextField();
+        txtCedula.setPreferredSize(new Dimension(150, 30)); // Altura uniforme para el textbox
         panelFormulario.add(txtCedula);
 
         panelPrincipal.add(panelFormulario, BorderLayout.CENTER);

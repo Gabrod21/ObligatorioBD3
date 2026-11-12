@@ -3,6 +3,7 @@ package grafica.ventanas;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.List;
@@ -39,6 +40,7 @@ public class VentanaListarRegistros extends JDialog {
 
         panelSuperior.add(new JLabel("Cédula:"));
         txtCedula = new JTextField();
+        txtCedula.setPreferredSize(new Dimension(120, 30)); // Altura uniforme para el textbox
         panelSuperior.add(txtCedula);
 
         JButton btnBuscar = new JButton("🔍 Buscar");
