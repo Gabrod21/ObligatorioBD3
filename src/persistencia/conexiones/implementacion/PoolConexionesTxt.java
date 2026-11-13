@@ -6,7 +6,8 @@ import persistencia.conexiones.interfaces.IPoolConexiones;
 
 public class PoolConexionesTxt implements IPoolConexiones {
 	
-	Monitor monitor = null;
+	private Monitor monitor;
+
 	
 	public PoolConexionesTxt() throws PersistenciaException {
 
