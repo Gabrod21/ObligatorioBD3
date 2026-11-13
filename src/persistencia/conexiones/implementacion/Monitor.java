@@ -14,7 +14,7 @@ public class Monitor {
 		this.escribiendo = false;
 	}
 	
-    public static Monitor getInstanceMonitor(){
+    public static synchronized Monitor getInstanceMonitor(){
         if(instance == null)
             instance = new Monitor();
         return instance;
