@@ -10,7 +10,7 @@ import logica.Alumno;
 import logica.LogicaException;
 import logica.valueObjects.VOAlumno;
 import logica.valueObjects.VOAlumnoProm;
-
+import logica.valueObjects.VORegistroListado;
 import persistencia.conexiones.PersistenciaException;
 import persistencia.conexiones.implementacion.ConexionTxt;
 import persistencia.conexiones.interfaces.IConexion;
@@ -18,10 +18,8 @@ import persistencia.daos.interfaces.IDAOAlumnos;
 
 public class DAOAlumnosTxt implements IDAOAlumnos {
 
-    private ManejoTxt manejo;
-
-    public DAOAlumnosTxt() throws PersistenciaException {
-        manejo = new ManejoTxt();
+    public DAOAlumnosTxt() {
+    	
     }
 
     // Verifica que sea una conexión TXT
@@ -51,16 +49,17 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
     }
 
     // Lee todos los alumnos
-    private List<Alumno> leerAlumnos()
+    private List<Alumno> leerAlumnos(IConexion icon)
             throws PersistenciaException, LogicaException {
 
         List<Alumno> lista = new ArrayList<>();
 
-        if (!manejo.existeTxt("alumnos.txt")) {
+        ConexionTxt conexion = (ConexionTxt) icon;
+        if (!conexion.getManejoTxt().existeTxt("alumnos.txt")) {
             return lista;
         }
 
-        List<String> lineas = manejo.leerTxt("alumnos.txt");
+        List<String> lineas = conexion.getManejoTxt().leerTxt("alumnos.txt");
 
         try {
 
@@ -103,7 +102,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
     }
 
     // Guarda todos los alumnos ordenados por cedula
-    private void guardarAlumnos(List<Alumno> lista)
+    private void guardarAlumnos(List<Alumno> lista, IConexion icon)
             throws PersistenciaException {
 
         Collections.sort(
@@ -123,22 +122,24 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
                  .append(System.lineSeparator());
         }
 
-        manejo.escribirTxt("alumnos.txt", texto.toString());
+        ConexionTxt conexion = (ConexionTxt) icon;
+        conexion.getManejoTxt().escribirTxt("alumnos.txt", texto.toString());
     }
 
     // Lee los registros correspondientes a un alumno
-    private List<String[]> leerRegistros(int cedula)
+    /*private List<String[]> leerRegistros(int cedula, IConexion icon)
             throws PersistenciaException {
 
         List<String[]> lista = new ArrayList<>();
 
         String archivo = "registros" + cedula + ".txt";
 
-        if (!manejo.existeTxt(archivo)) {
+        ConexionTxt conexion = (ConexionTxt) icon;
+        if (!conexion.getManejoTxt().existeTxt(archivo)) {
             return lista;
         }
 
-        List<String> lineas = manejo.leerTxt(archivo);
+        List<String> lineas = conexion.getManejoTxt().leerTxt(archivo);
 
         try {
 
@@ -170,13 +171,13 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
         }
 
         return lista;
-    }
+    }*/
 
     // Calcula el promedio de notas de un alumno
-    private double calcularPromedio(int cedula)
+    /*private double calcularPromedio(int cedula)
             throws PersistenciaException {
 
-        List<String[]> registros = leerRegistros(cedula);
+        List<String[]> registros = leerRegistros(cedula, null);
 
         if (registros.isEmpty()) {
             return 0;
@@ -190,7 +191,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
         }
 
         return (double) suma / registros.size();
-    }
+    }*/
 
     @Override
     public boolean member(IConexion icon, int cedA)
@@ -198,7 +199,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         validarConexion(icon);
 
-        List<Alumno> lista = leerAlumnos();
+        List<Alumno> lista = leerAlumnos(icon);
 
         for (Alumno alu : lista) {
 
@@ -216,7 +217,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         validarModificacion(icon);
 
-        List<Alumno> lista = leerAlumnos();
+        List<Alumno> lista = leerAlumnos(icon);
 
         if (member(icon, alu.getCedula())) {
             throw new PersistenciaException(
@@ -226,13 +227,14 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         lista.add(alu);
 
-        guardarAlumnos(lista);
+        guardarAlumnos(lista, icon);
 
         // Creamos el archivo individual de registros
         String archivo = "registros" + alu.getCedula() + ".txt";
 
-        if (!manejo.existeTxt(archivo)) {
-            manejo.escribirTxt(archivo, "");
+        ConexionTxt conexion = (ConexionTxt) icon;
+        if (!conexion.getManejoTxt().existeTxt(archivo)) {
+        	conexion.getManejoTxt().escribirTxt(archivo, "");
         }
     }
 
@@ -242,7 +244,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         validarConexion(icon);
 
-        List<Alumno> lista = leerAlumnos();
+        List<Alumno> lista = leerAlumnos(icon);
 
         for (Alumno alu : lista) {
 
@@ -260,7 +262,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         validarConexion(icon);
 
-        return leerAlumnos().isEmpty();
+        return leerAlumnos(icon).isEmpty();
     }
 
     @Override
@@ -271,7 +273,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         List<VOAlumno> resultado = new ArrayList<>();
 
-        List<Alumno> lista = leerAlumnos();
+        List<Alumno> lista = leerAlumnos(icon);
 
         for (Alumno alu : lista) {
 
@@ -290,10 +292,10 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
     @Override
     public VOAlumnoProm alumnoMayorPromedio(IConexion icon)
             throws PersistenciaException, LogicaException {
-
+    	
         validarConexion(icon);
 
-        List<Alumno> lista = leerAlumnos();
+        List<Alumno> lista = leerAlumnos(icon);
 
         VOAlumnoProm mayor = null;
 
@@ -301,16 +303,9 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         for (Alumno alu : lista) {
 
-            List<String[]> registros =
-                leerRegistros(alu.getCedula());
-
-            // No consideramos alumnos sin registros
-            if (!registros.isEmpty()) {
-
-                double promedio =
-                    calcularPromedio(alu.getCedula());
-
-                if (promedio > mayorPromedio) {
+        	double promedio = alu.promedioNotas(icon);
+        	
+            if (promedio > mayorPromedio) {
 
                     mayorPromedio = promedio;
 
@@ -320,10 +315,9 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
                         alu.getApellido(),
                         promedio
                     );
-                }
             }
         }
-
+        
         return mayor;
     }
 
@@ -333,23 +327,17 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
 
         validarConexion(icon);
 
-        List<Alumno> lista = leerAlumnos();
+        List<Alumno> lista = leerAlumnos(icon);
 
         int contador = 0;
 
         for (Alumno alu : lista) {
 
-            List<String[]> registros =
-                leerRegistros(alu.getCedula());
+        	List<VORegistroListado> registros = alu.listarRegistros(icon);
 
-            for (String[] datos : registros) {
+            for (VORegistroListado reg : registros) {
 
-                String actividad = datos[1].trim();
-
-                int notaRegistro =
-                    Integer.parseInt(datos[2].trim());
-
-                if (actividad.equals(act) && notaRegistro == nota) {
+                if (reg.getActividad().equals(act) && reg.getNota() == nota)
 
                     contador++;
 
@@ -357,7 +345,7 @@ public class DAOAlumnosTxt implements IDAOAlumnos {
                     break;
                 }
             }
-        }
+        
 
         return contador;
     }

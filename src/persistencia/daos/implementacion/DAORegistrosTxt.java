@@ -17,11 +17,9 @@ import persistencia.daos.interfaces.IDAORegistros;
 public class DAORegistrosTxt implements IDAORegistros {
 
     private int cedula;
-    private ManejoTxt manejo;
 
     public DAORegistrosTxt(int cedula) throws PersistenciaException {
         this.cedula = cedula;
-        manejo = new ManejoTxt();
     }
 
     // Devuelve el nombre del archivo correspondiente al alumno
@@ -56,18 +54,19 @@ public class DAORegistrosTxt implements IDAORegistros {
     }
 
     // Lee todos los registros del archivo
-    private List<Registro> leerRegistros()
+    private List<Registro> leerRegistros(IConexion icon)
             throws PersistenciaException {
 
         List<Registro> lista = new ArrayList<>();
 
         String archivo = nombreArchivo();
 
-        if (!manejo.existeTxt(archivo)) {
+        ConexionTxt conexion = (ConexionTxt) icon;
+        if (!conexion.getManejoTxt().existeTxt(archivo)) {
             return lista;
         }
 
-        List<String> lineas = manejo.leerTxt(archivo);
+        List<String> lineas = conexion.getManejoTxt().leerTxt(archivo);
 
         try {
             for (String linea : lineas) {
@@ -112,7 +111,7 @@ public class DAORegistrosTxt implements IDAORegistros {
 
         validarConexion(icon);
 
-        return leerRegistros().size();
+        return leerRegistros(icon).size();
     }
 
     @Override
@@ -133,7 +132,8 @@ public class DAORegistrosTxt implements IDAORegistros {
                      + reg.getActividad() + " | "
                      + reg.getNota();
 
-        manejo.agregarTxt(nombreArchivo(), linea);
+        ConexionTxt conexion = (ConexionTxt) icon;
+        conexion.getManejoTxt().agregarTxt(nombreArchivo(), linea);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class DAORegistrosTxt implements IDAORegistros {
 
         validarConexion(icon);
 
-        List<Registro> lista = leerRegistros();
+        List<Registro> lista = leerRegistros(icon);
 
         for (Registro reg : lista) {
 
@@ -162,7 +162,7 @@ public class DAORegistrosTxt implements IDAORegistros {
 
         List<VORegistroListado> resultado = new ArrayList<>();
 
-        List<Registro> lista = leerRegistros();
+        List<Registro> lista = leerRegistros(icon);
 
         for (Registro reg : lista) {
 
@@ -184,7 +184,7 @@ public class DAORegistrosTxt implements IDAORegistros {
 
         validarConexion(icon);
 
-        List<Registro> lista = leerRegistros();
+        List<Registro> lista = leerRegistros(icon);
 
         if (lista.isEmpty()) {
             return 0;
@@ -205,7 +205,7 @@ public class DAORegistrosTxt implements IDAORegistros {
 
         validarConexion(icon);
 
-        List<Registro> lista = leerRegistros();
+        List<Registro> lista = leerRegistros(icon);
 
         if (lista.isEmpty()) {
             return null;
