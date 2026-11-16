@@ -129,6 +129,16 @@ public class Fachada extends UnicastRemoteObject implements IFachadaRemota {
             return lista;
 
         } finally {
+        	//descomentar bloque de abajo para testear concurrencia
+        	/*
+        	try {
+        	    Thread.sleep(10000);
+        	} catch (InterruptedException e) {
+        	    Thread.currentThread().interrupt();
+        	}
+        	*/
+        	/*-------------------------------------------------*/
+        	
             pool.liberarConexion(icon, transaccionOK);
         }
     }

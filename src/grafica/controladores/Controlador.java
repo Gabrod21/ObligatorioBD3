@@ -31,8 +31,8 @@ public class Controlador {
             // Obtener el puerto desde config.properties
             int puerto = Integer.parseInt(propiedades.getProperty("puertoRMI"));
 
-            // El controlador le indica al servidor qué puerto utilizar
-            ServidorRMI.iniciarServidor(puerto);
+            // El controlador le indica al servidor qué puerto utilizar (SOLO para pruebas)
+            //ServidorRMI.iniciarServidor(puerto);
 
             // El controlador utiliza ese mismo puerto para conectarse
             this.fachada = (IFachadaRemota)
@@ -41,8 +41,7 @@ public class Controlador {
         } catch (Exception e) {
 
             throw new RemoteException(
-                "No se pudo cargar la configuración o iniciar/conectar con el servidor RMI",
-                e
+                "No se pudo cargar la configuración o iniciar/conectar con el servidor RMI"
             );
         }
     }

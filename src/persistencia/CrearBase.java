@@ -28,22 +28,25 @@ public class CrearBase
 			p.load (new FileInputStream (nomArch));
 			
 			String driver = p.getProperty("driver");
-			String url  = p.getProperty("url");
+			String url_unparsed  = p.getProperty("url");
 			String user = p.getProperty("user");
 			String password = p.getProperty("password");
+			
+			String url = url_unparsed.substring(0, url_unparsed.lastIndexOf("/") + 1);
+			String nombreBD = url_unparsed.substring(url.lastIndexOf("/") + 1);
 			
 			Class.forName(driver);
 			Connection con = (Connection) DriverManager.getConnection(url, user, password);
 			
 			String sql;
 						
-			sql = "DROP DATABASE IF EXISTS ObligatorioBD3";
+			sql = "DROP DATABASE IF EXISTS " + nombreBD;
 			ejecutaStatement(con, sql);
 						
-			sql = "CREATE DATABASE ObligatorioBD3";
+			sql = "CREATE DATABASE " + nombreBD;
 			ejecutaStatement(con, sql);
 			
-			sql = "USE ObligatorioBD3";
+			sql = "USE " + nombreBD;
 			ejecutaStatement(con, sql);
 			
 			sql = "CREATE TABLE Alumnos (cedula INT,nombre VARCHAR(45),apellido VARCHAR(45),PRIMARY KEY (cedula))";
@@ -63,6 +66,8 @@ public class CrearBase
 			sql = "insert into Alumnos values (66666666, 'Merlina', 'Addams')";
 			ejecutaStatement(con, sql);
 						
+			System.out.println("Base de datos creada");
+			
 			con.close();
 			
 		} 
