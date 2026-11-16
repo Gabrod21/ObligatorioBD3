@@ -80,18 +80,39 @@ public class VentanaNuevoAlumno extends JDialog {
 
     private void registrar() {
         try {
-            int cedula = Integer.parseInt(txtCedula.getText());
+            String cedulaStr = txtCedula.getText().trim();
+            String nombre = txtNombre.getText().trim();
+            String apellido = txtApellido.getText().trim();
 
-            if (txtNombre.getText().trim().isEmpty() ||
-                txtApellido.getText().trim().isEmpty()) {
+            if (cedulaStr.isEmpty() || nombre.isEmpty() || apellido.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Complete todos los campos");
+                return;
+            }
+
+            // Validar que la cédula no contenga letras
+            if (!cedulaStr.matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "La cédula no debe contener puntos ni quiones, tampoco letras ni caracteres especiales");
+                return;
+            }
+
+            int cedula = Integer.parseInt(cedulaStr);
+
+            // Validar que el nombre no contenga números o caracteres extraños
+            if (!nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+                JOptionPane.showMessageDialog(this, "El nombre no debe contener números ni caracteres extraños");
+                return;
+            }
+
+            // Validar que el apellido no contenga números o caracteres extraños
+            if (!apellido.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+                JOptionPane.showMessageDialog(this, "El apellido no debe contener números ni caracteres extraños");
                 return;
             }
 
             controlador.nuevoAlumno(
                 cedula,
-                txtNombre.getText(),
-                txtApellido.getText()
+                nombre,
+                apellido
             );
 
             JOptionPane.showMessageDialog(this, "Alumno registrado correctamente");

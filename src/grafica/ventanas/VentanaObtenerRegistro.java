@@ -22,7 +22,7 @@ public class VentanaObtenerRegistro extends JDialog {
 
         this.controlador = controlador;
 
-        setSize(400, 220);
+        setSize(400, 200);
         setLocationRelativeTo(padre);
         setResizable(false); // Ventana no redimensionable
 
