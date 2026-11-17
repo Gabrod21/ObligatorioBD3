@@ -91,7 +91,7 @@ public class VentanaNuevoAlumno extends JDialog {
 
             // Validar que la cédula no contenga letras
             if (!cedulaStr.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "La cédula no debe contener puntos ni quiones, tampoco letras ni caracteres especiales");
+                JOptionPane.showMessageDialog(this, "La cédula no debe contener puntos ni guiones, tampoco letras ni caracteres especiales");
                 return;
             }
 
